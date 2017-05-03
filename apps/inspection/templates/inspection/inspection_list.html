@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<td>id</td>
+			<td>form</td>
+			<td>created when</td>
+		</tr>
+	</thead>
+	<tbody>
+		{% if object_list %}
+		{% for inspection in object_list %}
+		<tr>
+			<td>{{ inspection.id }}</td>
+			<td>{{ inspection.iform }}</td>
+			<td>{{ inspection.created_when }}</td>
+
+
+			<td>
+				<a class="btn btn-primary" href="{% url 'inspection:inspection_update' inspection.id %}">Update</a>
+				<a class="btn btn-danger" href="{% url 'inspection:inspection_delete' inspection.id %}">Delete</a>
+			</td>
+		</tr>
+		{% endfor %}
+
+		{% else %}
+		<h1>No Inspection in the database</h1>
+		{% endif %}
+	</tbody>
+</table>
+<ul class="pager">
+	<li>
+		{% if page_obj.has_previous %}
+       	 <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+		{% endif %}
+        </li>
+	<li>
+		{% if page_obj.has_next %}
+     	 <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    	{% endif %}
+    </li>
+</ul>
+{% endblock%}
