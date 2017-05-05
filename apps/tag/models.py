@@ -45,3 +45,5 @@ class Tag(ControlModel):
         # else:
         # return self.name
 
+    def get_tag(self, id):
+        return Tag

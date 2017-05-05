@@ -8,9 +8,6 @@ from apps.tag.models import Tag
 
 class InspectionForm(forms.ModelForm):
 
-    for fields in Inspection.objects.all():
-        print('-->>',type(fields.iform))
-
     class Meta:
 	    model = Inspection
 	    fields = [
@@ -25,13 +22,18 @@ class InspectionForm(forms.ModelForm):
 	    widgets = {
             'id': forms.TextInput(attrs={'class':'form-control'}),
             #'iform': forms.ModelChoiceField(queryset=IForm.objects.all()), # attrs={'class':'form-control'}),
-            'tag1': forms.TextInput(attrs={'class':'form-control'}),
+            'tag': forms.TextInput(attrs={'class':'form-control'}),
         }
 
 class InspectionForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
+        iform_id = kwargs.pop('iform_id', None)
+        print('iform_id',iform_id )
+
         super(InspectionForm, self).__init__(*args, **kwargs)
-        for i, q in enumerate(Tag.objects.all()):
-            self.fields['%s_field' % i] = forms.CharField(max_length=100, label=str(q))
+        tags = Tag.objects.all()
+        # TODO: Show the tags on a specific order
+        for i, q in enumerate(tags):
+            self.fields['%s' % q.id] = forms.CharField(max_length=100, label=str(q), )
 
