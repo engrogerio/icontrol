@@ -29,7 +29,20 @@ class Tag(ControlModel):
     class Meta:
         db_table='tag'
 
-    TYPE_CHOICES = ((1, 'Text'), (2, 'Integer Number'), (3, 'Float Point Number'), (4, 'Reference'))
+    TEXT = 1
+    INTEGER = 2
+    FLOAT = 3
+    REFERENCE = 4
+    BOOL = 5
+    DATE = 6
+    TIME = 7
+    DATETIME = 8
+
+    TYPE_CHOICES = ((TEXT, 'Text'), (INTEGER, 'Integer Number'), (FLOAT, 'Float Point Number'),
+                    (REFERENCE, 'Reference'), (BOOL, 'Yes/No'), (DATE, 'Date'), (TIME, 'Time'),
+                    (DATETIME, 'Date and Time')
+                    )
+
     UNIT_CHOICES = ((1, '°C'), (2, 'Kg'), (3, 'm'), (4, 's'))
 
     id = UUIDField(primary_key=True, default=uuid.uuid4, ) #editable=False)

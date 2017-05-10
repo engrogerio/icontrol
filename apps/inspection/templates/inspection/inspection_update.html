@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<h1>Inspection</h1>
 <form class="form-horizontal" method="post">{% csrf_token %}
     <fieldset>
         <legend>{{ title }}</legend>
@@ -19,7 +20,7 @@
                     <label class="control-label">{{ field.label }}</label>
                     <div class="controls">{{ field }}
                         {% if field.help_text %}
-                            <p class="help-inline"><small>{{ field.help_text }}</small></p>
+                            <p class="help-inline">{{ field.help_text }}</p>
                         {% endif %}
                     </div>
                 </div>
@@ -30,4 +31,5 @@
         <button type="submit" class="btn btn-primary" >Submit</button>
     </div>
 </form>
+
 {% endblock %}
