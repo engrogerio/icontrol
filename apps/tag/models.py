@@ -51,12 +51,11 @@ class Tag(ControlModel):
     unit = IntegerField('Unit', choices=UNIT_CHOICES, blank=True, null=True)
     decimal_places = IntegerField(default=0)
 
-
     def __str__(self):
-        # if self.unit:
-        return self.name #+'('+self.get_unit_display+')'
-        # else:
-        # return self.name
+        if self.unit:
+            return self.name + ' ('+self.get_unit_display()+' )'
+        else:
+            return self.name
 
     def get_tag(self, id):
         return Tag

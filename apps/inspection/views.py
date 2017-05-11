@@ -30,28 +30,34 @@ def inspection_update (request, pk=None):
     iform = inspection.iform
 
     if request.method == 'POST':
+
         form = InspectionForm(request.POST, iform_id=iform.id)
         if form.is_valid():
-            inspection.save()
-            return HttpResponseRedirect('/iform/list')
+            for field in form:
+                tag = Tag.objects.get(id=field.name)
+                # recover the Value object
+                obj = Value.objects.filter(inspection=inspection).get(tag=tag)
+                # update value value
+                # TODO: check on the tag if the value is on Text field or Numeric field of Value
+                obj.text = field.value()
+                # finally save the object in db
+                obj.save()
+            return HttpResponseRedirect('/inspection/list')
 
     if request.method == 'GET':
         # iterate iform fields and get types / values
         form = InspectionForm( iform_id=iform.id) #request.GET,
-        # get values from the inspection
 
-        # get the values for each field
+        # get the values saved for each field for this specific inspection and tag
         for field in form:
             tag = Tag.objects.get(id=field.name)
             value = Value.objects.filter(inspection=inspection).filter(tag=tag).values('text')[0]
-            print(field.value())
+            # TODO: check on the tag if the value is on Text field or Numeric field of Value
             field.initial = value['text']
     else:
         print(request.method)
 
     return render(request, 'inspection/inspection_update.html', {'form': form, 'iform': iform.name})
-
-
 
 def inspection_create (request, pk=None):
     # get iform for the new inspection
@@ -60,6 +66,7 @@ def inspection_create (request, pk=None):
     if request.method == 'POST':
         form = InspectionForm(request.POST, iform_id=pk) # , iform_id=pk)
         if form.is_valid():
+
             # creates a new inspection based on the iform
             inspection = Inspection()
             inspection.iform = iform

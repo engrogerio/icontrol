@@ -19,6 +19,6 @@ class Value(ControlModel):
     inspection =  ForeignKey(Inspection, related_name='inspection_values')
 
     def __str__(self):
-        return str(self.numeric or self.text) #+' ('+(self.tag.get_unit_display()) or '' +')'
+        return str(self.numeric or self.text)
 
 
