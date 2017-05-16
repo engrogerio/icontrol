@@ -41,11 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrap3',
     'apps.tag',
     'apps.value',
     'apps.inspection',
     'apps.iform',
-    'apps.form_set'
 ]
 
 MIDDLEWARE = [

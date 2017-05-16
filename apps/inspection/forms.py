@@ -16,16 +16,17 @@ class InspectionForm(forms.Form):
         # TODO: Show the tags on a specific order
         for i, q in enumerate(tags):
             if q.type == q.TEXT:
-                self.fields['%s' % q.id] = forms.CharField(max_length=1000, label=str(q), )
+                if not q.max_length:q.max_length=1000
+                self.fields['%s' % q.id] = forms.CharField(label=str(q), required=False, max_length=q.max_length, )
             elif q.type == q.INTEGER:
-                self.fields['%s' % q.id] = forms.IntegerField( label=str(q), )
+                self.fields['%s' % q.id] = forms.IntegerField(label=str(q), )
             elif q.type == q.FLOAT:
-                self.fields['%s' % q.id] = forms.DecimalField( label=str(q), )
+                self.fields['%s' % q.id] = forms.DecimalField(label=str(q), )
             elif q.type == q.BOOL:
-                self.fields['%s' % q.id] = forms.BooleanField( label=str(q), initial=False )
+                self.fields['%s' % q.id] = forms.BooleanField(label=str(q), required=False )
             elif q.type == q.DATE:
-                self.fields['%s' % q.id] = forms.DateField( label=str(q), initial=datetime.date.today)
+                self.fields['%s' % q.id] = forms.DateField(label=str(q), )
             elif q.type == q.TIME:
-                self.fields['%s' % q.id] = forms.TimeField( label=str(q), )
+                self.fields['%s' % q.id] = forms.TimeField(label=str(q), )
             elif q.type == q.DATETIME:
-                self.fields['%s' % q.id] = forms.DateTimeField( label=str(q), initial=datetime.datetime.today)
+                self.fields['%s' % q.id] = forms.DateTimeField(label=str(q), )

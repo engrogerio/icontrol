@@ -7,5 +7,7 @@
 	{{ form.as_p }}
 
 	<button class="btn btn-primary" type="submit">Save</button>
+	<button type="reset" class="btn btn-warning" >Reset form</button>
+	<a href="{% url 'iform:iform_list' %}" class="btn btn-danger">Cancel</a>
 </form>
 {% endblock %}

@@ -1,34 +1,13 @@
 {% extends 'base.html' %}
-
+{% load bootstrap3 %}
 {% block content %}
+<h1>New inspection: {{ iform }}</h1>
 <form class="form-horizontal" method="post">{% csrf_token %}
-    <fieldset>
-        <legend>{{ title }}</legend>
-        	<h1>New inspection for {{ iform }}</h1>
-        {% for field in form %}
-            {% if field.errors %}
-                <div class="control-group error">
-                    <label class="control-label">{{ field.label }}</label>
-                    <div class="controls">{{ field }}
-                        <span class="help-inline">
-                            {% for error in  field.errors %}{{ error }}{% endfor %}
-                        </span>
-                    </div>
-                </div>
-            {% else %}
-                <div class="control-group">
-                    <label class="control-label">{{ field.label }}</label>
-                    <div class="controls">{{ field }}
-                        {% if field.help_text %}
-                            <p class="help-inline"><small>{{ field.help_text }}</small></p>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </fieldset>
+    {% bootstrap_form form %}
     <div class="form-actions">
         <button type="submit" class="btn btn-primary" >Submit</button>
+        <button type="reset" class="btn btn-warning" >Reset form</button>
+        <a href="{% url 'inspection:inspection_list' %}" class="btn btn-danger">Cancel</a>
     </div>
 </form>
 {% endblock %}

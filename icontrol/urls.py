@@ -15,12 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from apps.form_set.views import test_profile_settings
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^tag/', include('apps.tag.urls', namespace='tag')),
     url(r'^iform/', include('apps.iform.urls', namespace='iform')),
     url(r'^inspection/', include('apps.inspection.urls', namespace='inspection')),
-    url(r'^formset/', test_profile_settings)
 ]

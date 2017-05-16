@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from django.db.models import ForeignKey, UUIDField
-import uuid
+from django.db.models import ForeignKey, DateField, TimeField
+import datetime
 from apps.control.models import ControlModel
 from apps.iform.models import IForm
 
