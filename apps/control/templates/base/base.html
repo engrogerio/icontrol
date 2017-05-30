@@ -23,7 +23,7 @@
 </head>
 <body>
 <div class="container">
-	<h1> Inventsis - Enterprise Data Repository</h1>
+	<h2> Inventsis - Enterprise Data Repository</h2>
 	{% block navbar %}
 		<div class="bs-docs-section clearfix">
 		    <div class="row">
@@ -32,7 +32,7 @@
 		            	<nav class="navbar navbar-default">
 		                	<div class="container-fluid">
 		                  		<div class="navbar-header">
-		                    		<a class="navbar-brand" href="#">Home</a>
+		                    		<a class="navbar-brand" href="{% url 'inspection:inspection_list' %}">Home</a>
 		                  		</div>
 		                  	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		                    	<ul class="nav navbar-nav">
@@ -72,7 +72,7 @@
 
 
 	{% block content %}
-	<h4>	Bloque de contenido		</h4>
+	<h4> Invent sistemas </h4>
 	{% endblock %}
 
 
