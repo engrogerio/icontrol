@@ -14,22 +14,21 @@ class IForm(ControlModel):
 
     id = UUIDField(primary_key=True, default=uuid.uuid4,)  # editable=False)
     name = CharField(max_length=255)
-    tag = ManyToManyField('tag.Tag', related_name='iform_tags', blank=True)
+    parent = ForeignKey('iform.IForm', null=True, blank=True)
 
     def __str__(self):
         return self.name
 
-class IformTag(models.Model):
 
-    def number(self):
-        no = IForm.objects.filter().count()
-        if no == None:
-            return 1
-        else:
-            return no + 1
+class IFormTag(models.Model):
 
-    iform = ForeignKey(IForm, related_name='tag_order_form')
-    tag = ForeignKey('tag.Tag', related_name='tag_order')
-    order = IntegerField(default=number)
-    required = BooleanField(default=False)
+    class Meta:
+        db_table='iform_tag'
 
+    iform = ForeignKey(IForm, related_name='iform_tag')
+    tag = ForeignKey('tag.Tag', related_name='iform_tag')
+    order = IntegerField(default=1)
+    read_only = BooleanField(default=False)
+
+    class Meta:
+        unique_together = ["iform", "tag"]

@@ -1,7 +1,8 @@
 # -*- encoding:utf-8 -*-
 from django import forms
+from django.forms import formset_factory
+from apps.iform.models import IForm, IFormTag
 
-from apps.iform.models import IForm
 #TagOrder
 
 
@@ -32,21 +33,37 @@ from apps.iform.models import IForm
 
 class IFormForm(forms.ModelForm):
 
+	order = forms.ChoiceField(choices=((str(x), x) for x in range(1,20)))
+	formset = formset_factory(IFormTag, extra=2) #, fields=('order', 'read_only'))
+
 	class Meta:
 		model = IForm
 		fields = [
 			'name',
-            'tag',
+            #'tag',
+			'order',
+
 		]
 		labels = {
 			'name': 'Name',
-            'tag': 'Tags',
+            #'tag': 'Tags',
+			'order': 'Order',
+		}
+		help_texts = {
+		'name': ('Type in the name of the Form'),
+		}
+		error_messages = {
+			'name': {
+				'max_length': ("This name is too long."),
+			}
 		}
 		widgets = {
 			'name': forms.TextInput(attrs={'class': 'form-control'}),
-			'tag': forms.CheckboxSelectMultiple(),
-
+			#'tag': forms.CheckboxSelectMultiple(),
+			'order': forms.ChoiceField(choices=((str(x), x) for x in range(1,32))),
 		}
+
+
     #
 	# def __init__(self):
 	# 	tag_order = self.name

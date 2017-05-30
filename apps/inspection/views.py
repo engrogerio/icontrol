@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 
+
 from apps.value.models import Value
 
 
@@ -47,6 +48,7 @@ def add_data(tag, value, data, inspection):
 
     REFERENCE: TODO
     """
+
     number = None
     text = None
 
@@ -54,15 +56,17 @@ def add_data(tag, value, data, inspection):
         text = str(data)
 
     elif tag.type in (tag.TEXT, tag.DATETIME, tag.TIME, tag.DATE):
-
         text = str(data)
 
-    elif tag.type in (tag.INTEGER, tag.FLOAT):
-        number = data
+    elif tag.type == tag.FLOAT:
+        number = float(data) if data else None
+    elif tag.type == tag.INTEGER:
+        number = int(data) if data else None
     else:
-        number = data
+        number = int(data) if data else None
         text = str(data)
     # finally save the instance in db
+
     value.tag = tag
     value.inspection = inspection
     value.text = text
@@ -82,7 +86,6 @@ def get_data(tag, inspection):
             data = Value.objects.filter(inspection=inspection).get(tag=tag).number
         except:
             data = None
-
     return data
 
 def inspection_update (request, pk=None):
@@ -148,6 +151,7 @@ def inspection_create (request, pk=None):
                 data = field.value()
                 tag = Tag.objects.get(id=field.name)
                 value.inspection = inspection
+
                 # finally save the object in db
                 add_data(tag, value, data, inspection)
             messages.add_message(request, messages.SUCCESS, 'Inspection was succefully created!')
