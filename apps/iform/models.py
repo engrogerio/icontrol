@@ -27,8 +27,9 @@ class IFormTag(models.Model):
 
     iform = ForeignKey(IForm, related_name='iform_tag')
     tag = ForeignKey('tag.Tag', related_name='iform_tag')
-    order = IntegerField(default=1)
+    order = IntegerField(default=1) # TODO: This must be automatically increased
     read_only = BooleanField(default=False)
 
     class Meta:
+        # every tag must appears only once on one form
         unique_together = ["iform", "tag"]

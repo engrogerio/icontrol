@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.shortcuts import render
 from apps.iform.models import IForm, IFormTag
-from apps.tag.models import Tag
+from apps.iform.forms import IFormTagFormSet
 
 def IFormIndex(request):
     return HttpResponse ('Form list')
@@ -16,61 +16,62 @@ class IFormList(ListView):
     template_name = 'iform/iform_list.html'
     paginate_by = 6
 
-
-class IFormCreate(CreateView):
-    model = IForm
-    template_name = 'iform/iform_form.html'
-    form_class = IFormForm
-    success_url = reverse_lazy('iform:iform_list')
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        # get tags fields
-        tag_uids = form['tag']
-        tag_id = form['id']
-        iform=form.instance
-        # get quantity of tags that may be selected for the positioning index (order)
-        position = 0
-        # iter each tag, fill the values and save it.
-        for id in tag_id.value():
-            # value = id['tag']
-            print('value--->>>', id)
-            position = position + 1
-            tag = Tag.objects.get(id=id['tag'].value())
-            # creates a new iform_tag (m2m field)
-            iform_tag = IFormTag()
-            iform_tag.tag = tag
-            iform_tag.iform = iform
-            #iform_tag.order = position
-            iform_tag.save()
-
-        self.object.save()
-        return HttpResponseRedirect(self.get_success_url())
-
-
-class IFormUpdate(UpdateView):
-    model = IForm
-    template_name = 'iform/iform_form.html'
-    form_class = IFormForm
-    success_url = reverse_lazy('iform:iform_list')
-
-    def form_valid(self, form):
-        # commit false does not save tags due to the trough
-        self.object = form.save(commit=False)
-        # get tags fields
-        tag_ids = form['tag']
-        iform = form.instance
-        # get quantity of tags that may be selected for the positioning index (order)
-        position = 0
-        # iter each tag, fill the values and save it.
-        for id in tag_ids.value():
-            tag = Tag.objects.get(id=id)
-            # gets the instance of iform_tag based on the iform and the tag
-            iform_tag = IFormTag.objects.filter(iform=iform).get(tag=tag)
-            iform_tag.order = position
-            iform_tag.save()
-        self.object.save()
-        return HttpResponseRedirect(self.get_success_url())
+#
+# class IFormCreate(CreateView):
+#     model = IForm
+#     template_name = 'iform/iform_form.html'
+#     form_class = IFormForm
+#     success_url = reverse_lazy('iform:iform_list')
+#
+#     def form_valid(self, form):
+#         self.object = form.save(commit=False)
+#         # get tags fields
+#         tag_uids = form['tag']
+#         tag_id = form['id']
+#         iform=form.instance
+#         # get quantity of tags that may be selected for the positioning index (order)
+#         position = 0
+#         # iter each tag, fill the values and save it.
+#         for id in tag_id.value():
+#             # value = id['tag']
+#             print('value--->>>', id)
+#             position = position + 1
+#             tag = Tag.objects.get(id=id['tag'].value())
+#             # creates a new iform_tag (m2m field)
+#             iform_tag = IFormTag()
+#             iform_tag.tag = tag
+#             iform_tag.iform = iform
+#             #iform_tag.order = position
+#             iform_tag.save()
+#
+#         self.object.save()
+#         return HttpResponseRedirect(self.get_success_url())
+#
+#
+# class IFormUpdate(UpdateView):
+#     model = IForm
+#     template_name = 'iform/iform_form.html'
+#     form_class = IFormForm
+#     success_url = reverse_lazy('iform:iform_list')
+#
+#
+#     def form_valid(self, form):
+#
+#         self.object = form.save(commit=True)
+#         # get tags fields
+#         tag_ids = form['iform_tag']
+#         iform = form.instance
+#         # get quantity of tags that may be selected for the positioning index (order)
+#         position = 0
+#         # iter each tag, fill the values and save it.
+#         for id in tag_ids.value():
+#             tag = Tag.objects.get(id=id)
+#             # gets the instance of iform_tag based on the iform and the tag
+#             iform_tag = IFormTag.objects.filter(iform=iform).get(tag=tag)
+#             iform_tag.order = position
+#             iform_tag.save()
+#         self.object.save()
+#         return HttpResponseRedirect(self.get_success_url())
 
 
 class IFormDelete(DeleteView):
@@ -78,16 +79,66 @@ class IFormDelete(DeleteView):
     form_class = IFormForm
     template_name = 'iform/iform_delete.html'
     success_url = reverse_lazy('iform:iform_list')
-#
-#
-# def add_iform_tag(request):
-#     form = IFormForm(request.POST or None)
-#     if form.is_valid():
-#         iform = IForm.objects.create()
-#
-#
-# def iform_create(request):
-#     pass
-#
-# def iform_update(request, pk=None):
-#     pass
+
+
+class IFormCreate(CreateView):
+    #fields = ('name', 'parent')
+    model = IForm
+    template_name = 'iform/iform_form.html'
+    form_class = IFormForm
+    success_url = reverse_lazy('iform:iform_list')
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        iformtag_form = IFormTagFormSet()
+
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  iformtag_form=iformtag_form,))
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handles POST requests, instantiating a form instance and its inline
+        formsets with the passed POST variables and then checking them for
+        validity.
+        """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        iformtag_form = IFormTagFormSet(self.request.POST)
+        if (form.is_valid() and iformtag_form.is_valid()):
+            return self.form_valid(form, iformtag_form)
+        else:
+            return self.form_invalid(form, iformtag_form)
+
+    def form_valid(self, form, iformtag_form):
+        """
+        Called if all forms are valid. Creates a IForm instance along with
+        associated IFormTags and then redirects to a
+        success page.
+        """
+        self.object = form.save()
+        iformtag_form.instance = self.object
+        iformtag_form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, iformtag_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  iformtag_form=iformtag_form))
+
+class IFormUpdate(UpdateView):
+    model = IForm
+    template_name = 'iform/iform_form.html'
+    form_class = IFormForm
+    success_url = reverse_lazy('iform:iform_list')

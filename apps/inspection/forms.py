@@ -5,7 +5,6 @@ from apps.iform.models import IForm, IFormTag
 from apps.tag.models import Tag
 import datetime
 
-# TODO: make fields read only then iform_tag.read_only = true
 # TODO: shoud I use validators? https://docs.djangoproject.com/en/1.11/ref/validators/
 # TODO: should I use widgets instead of form.Fields?
 
@@ -26,14 +25,6 @@ class InspectionForm(forms.Form):
                                                 required=q.required,
                                                 max_length=q.max_length
                                                 )
-
-                # ).widget.attrs['readonly']=True #iform_tag.read_only
-
-                # self.fields['%s' % q.id].widget = forms.TextInput(attrs=
-                #                                                   {
-                #                                                       'placeholder': str(q),
-                #                                                       'required': False
-                #                                                   })
 
             elif q.type == q.INTEGER:
                 self.fields['%s' % q.id] = forms.IntegerField(label=str(q),

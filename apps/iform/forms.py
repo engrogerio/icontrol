@@ -2,8 +2,8 @@
 from django import forms
 from django.forms import formset_factory
 from apps.iform.models import IForm, IFormTag
+from django.forms.models import inlineformset_factory
 
-#TagOrder
 
 
 # class TagFormWidget(forms.MultiWidget):
@@ -33,38 +33,36 @@ from apps.iform.models import IForm, IFormTag
 
 class IFormForm(forms.ModelForm):
 
-	order = forms.ChoiceField(choices=((str(x), x) for x in range(1,20)))
-	formset = formset_factory(IFormTag, extra=2) #, fields=('order', 'read_only'))
+	#formset = formset_factory(IFormTag, extra=2)
 
 	class Meta:
 		model = IForm
-		fields = [
-			'name',
-            #'tag',
-			'order',
-
-		]
-		labels = {
-			'name': 'Name',
-            #'tag': 'Tags',
-			'order': 'Order',
-		}
-		help_texts = {
-		'name': ('Type in the name of the Form'),
-		}
-		error_messages = {
-			'name': {
-				'max_length': ("This name is too long."),
-			}
-		}
+		exclude=('created_by', 'created_when', 'id')
+	# 	fields = [
+	# 		'name',
+     #        'parent',
+	# 	]
+	# 	labels = {
+	# 		'name': 'Name',
+     #        'parent': 'Parent'
+	# 	}
+	# 	help_texts = {
+	# 	'name': ('Type in the name of the Form'),
+	# 	}
+	# 	error_messages = {
+	# 		'name': {
+	# 			'max_length': ("This name is too long."),
+	# 		}
+	# 	}
 		widgets = {
 			'name': forms.TextInput(attrs={'class': 'form-control'}),
-			#'tag': forms.CheckboxSelectMultiple(),
-			'order': forms.ChoiceField(choices=((str(x), x) for x in range(1,32))),
+			'parent': forms.Select(attrs={'class': 'form-control'}),
+
 		}
 
+IFormTagFormSet = inlineformset_factory(IForm, IFormTag, form=IFormForm)
 
-    #
+
 	# def __init__(self):
 	# 	tag_order = self.name
 	# 	#self.fields['tag'] = TagFormField(attrs={'qtty': tag_order, })

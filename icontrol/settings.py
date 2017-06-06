@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'apps.value',
     'apps.inspection',
     'apps.iform',
+    'uni_form',
 ]
 
 MIDDLEWARE = [
@@ -126,7 +127,7 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = os.path.join(BASE_DIR,'/static/')
 STATIC_ROOT = os.path.join(BASE_DIR,'')
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 

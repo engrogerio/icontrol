@@ -1,11 +1,90 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 {% block content %}
+{% load uni_form_tags %}
+<head>
+<script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/jquery.formset.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $(".inline.{{ iformtag_form.prefix }}").formset({
+                prefix: "{{ iformtag_form.prefix }}",
+            })
+        })
+    function add_inline_form(prefix) {
+    var count = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val(), 10);
+    var last_form = $('.' + prefix + ':last');
+
+    var new_form = last_form.clone(false).html(last_form.html().replace(
+          new RegExp(prefix + '-\\\\d-', 'g'), prefix + '-' + count + '-'));
+    new_form.find('input[type="text"], textarea').each(function () {
+        $(this).val('');
+    });
+    new_form.hide().insertAfter(last_form).slideDown(300);
+
+    // Update the total form count
+    $('#id_' + prefix + '-TOTAL_FORMS').val(count + 1);
+
+    // re-initialise triggers
+
+    return false;
+}
+
+var regex = /(?:inline\-form) ([\\w\-]*) (?:add|existing)/;
+$('.add-inline').each(function () {
+    var match = regex.exec($(this).closest('.body').find('.inline-form').attr('class'));
+    if (match && match.length > 1) {
+        $(this).click(function () {
+            return add_inline_form(match[1]);
+        });
+    }
+});
+    </script>
+
+</head>
+<h3>Form</h3>
 <form method="post">
 	{% csrf_token %}
-	<h3>Form</h3>
+    <div>
 	{{ form.as_p }}
+    </div>
+    <fieldset>
+        <legend>Tags</legend>
+        {{ iformtag_form.management_form }}
+        {{ iformtag_form.non_form_errors }}
 
+        <table>
+            <tr>
+                <th>Tag</th>
+                <th>Order</th>
+                <th>Read only</th>
+            </tr>
+
+        {% for form in iformtag_form %}
+
+            <div class="inline {{ iformtag_form.prefix }}">
+               <tr>
+                    <td>{{ form.tag }}</td>
+                    <td>{{ form.order }}</td>
+                    <td>{{ form.read_only }}</td>
+               </tr>
+            </div>
+        {% endfor %}
+
+        </table>
+    </fieldset>
+<div class="body">
+    {{ prefix_formset.management_form }}
+    {{ prefix_formset.non_form_errors }}
+    {% for form in prefix_formset.forms %}
+    <div class="inline-form prefix">
+        {{ form|as_uni_form }}
+    </div>
+    {% endfor %}
+    <div class="new-inline">
+        <input type="button" class="add-inline" value="Add another form" />
+    </div>
+</div>
 	<button class="btn btn-primary" type="submit">Save</button>
 	<button type="reset" class="btn btn-warning" >Reset form</button>
 	<a href="{% url 'iform:iform_list' %}" class="btn btn-danger">Cancel</a>
