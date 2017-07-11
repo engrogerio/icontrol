@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'apps.value',
     'apps.inspection',
     'apps.iform',
-    'uni_form',
 ]
 
 MIDDLEWARE = [

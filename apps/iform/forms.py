@@ -6,46 +6,29 @@ from django.forms.models import inlineformset_factory
 
 
 
-# class TagFormWidget(forms.MultiWidget):
-#
-#     def __init__(self, attrs=None):
-#         self.qtd_pallets = attrs['qtty']
-#         attrs['size'] = 5
-#         widgets = [forms.TextInput(attrs), forms.TextInput(attrs)]
-#         super(TagFormWidget, self).__init__(widgets, attrs)
-#
-#     def decompress(self, value):
-#         if value:
-#             return value.split(',')
-#         return ['']*self.qtd_pallets
-
-
-# class TagFormField(forms.fields.MultiValueField):
-#
-#     def __init__(self, attrs=None):
-#         self.widget = TagFormWidget(attrs)
-#         fields = [forms.fields.CharField(), forms.fields.IntegerField()]
-#         super(TagFormField, self).__init__(fields, attrs)
-#
-#     def compress(self, values):
-#         return ','.join(values)
-
-
 class IFormForm(forms.ModelForm):
 
-	#formset = formset_factory(IFormTag, extra=2)
+	def __init__(self, *args, **kwargs):
+		iform_id = kwargs.pop('iform_id', None)
+		super(IFormForm, self).__init__(*args, **kwargs)
+		# self.fields['units'] = forms.ModelMultipleChoiceField(
+		# 	required=False,
+		# 	queryset=IForm.objects.filter(id=iform_id),
+		# 	widget=forms.SelectMultiple(attrs={'title': _("Add unit")})
+		# )
+
 
 	class Meta:
 		model = IForm
-		exclude=('created_by', 'created_when', 'id')
-	# 	fields = [
-	# 		'name',
-     #        'parent',
-	# 	]
-	# 	labels = {
-	# 		'name': 'Name',
-     #        'parent': 'Parent'
-	# 	}
+		# exclude = ('created_by', 'created_when', 'id')
+		fields = [
+			'name',
+            'parent'
+		]
+		# labels = {
+		# 	'name': 'Name',
+         #    'parent': 'Parent'
+		# }
 	# 	help_texts = {
 	# 	'name': ('Type in the name of the Form'),
 	# 	}
@@ -60,9 +43,42 @@ class IFormForm(forms.ModelForm):
 
 		}
 
-IFormTagFormSet = inlineformset_factory(IForm, IFormTag, form=IFormForm)
+
+class IFormTagForm(forms.ModelForm):
 
 
-	# def __init__(self):
-	# 	tag_order = self.name
-	# 	#self.fields['tag'] = TagFormField(attrs={'qtty': tag_order, })
+	class Meta:
+		model = IFormTag
+		exclude = ('created_by', 'created_when', 'id')
+		# fields = [
+		# 	'tag',
+         #    'order',
+		# 	'read_only'
+		# ]
+		# labels = {
+		# 	'tag': 'Name',
+         #    'order': 'Parent',
+		# 	'read_only': 'Read only'
+		# }
+		# help_texts = {
+		# 'order': ('Enter the position of the tag on the form'),
+		# }
+		# # error_messages = {
+		# # 	'tag': {
+		# # 		'max_length': ("This name is too long."),
+		# # 	}
+		# # }
+		# widgets = {
+		# 	'tag': forms.Select(attrs={'class': 'form-control'}),
+		# 	'order': forms.NumberInput(attrs={'class': 'form-control'}),
+		# 	'read_only': forms.NullBooleanField() #attrs={'class': 'form-control'}),
+		# }
+
+IFormTagFormSet = inlineformset_factory(
+    IForm,
+    IFormTag,
+    IFormForm,
+    IFormTagForm,
+    fields=('tag', 'order', 'read_only'),
+    extra=1,
+    can_delete=True)

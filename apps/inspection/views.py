@@ -54,10 +54,8 @@ def add_data(tag, value, data, inspection):
 
     if tag.type == tag.BOOL:
         text = str(data)
-
     elif tag.type in (tag.TEXT, tag.DATETIME, tag.TIME, tag.DATE):
         text = str(data)
-
     elif tag.type == tag.FLOAT:
         number = float(data) if data else None
     elif tag.type == tag.INTEGER:
@@ -81,11 +79,18 @@ def get_data(tag, inspection):
         except:
             data = None
 
-    if tag.type in (tag.INTEGER, tag.FLOAT):
+    if tag.type == tag.FLOAT:
         try:
             data = Value.objects.filter(inspection=inspection).get(tag=tag).number
         except:
             data = None
+
+    if tag.type == tag.INTEGER:
+        try:
+            data = int(Value.objects.filter(inspection=inspection).get(tag=tag).number)
+        except:
+            data = None
+
     return data
 
 def inspection_update (request, pk=None):
@@ -102,7 +107,7 @@ def inspection_update (request, pk=None):
             for field in form:
                 tag = Tag.objects.get(id=field.name)
                 # try to recover data from Value instance, but if can't, that is due to the tag was created
-                # after this inspection being created. So, its created a new Value instance.
+                # after this inspection had been created. So, its created a new Value instance.
                 try:
                     value = Value.objects.filter(inspection=inspection).get(tag=tag)
                 except:
