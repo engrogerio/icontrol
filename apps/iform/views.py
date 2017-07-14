@@ -69,9 +69,9 @@ def iform_update(request, pk=None):
     iform_form = IFormForm(request.POST, instance=iform)
 
     # get the iform_tags form instance
-    iform_tags = IFormTag.objects.filter(iform=iform)
 
-    IFormTagFormSet = inlineformset_factory(IForm, IFormTag, form=IFormTagForm, extra=1)
+
+    IFormTagFormSet = inlineformset_factory(IForm, IFormTag, form=IFormTagForm, extra=0)
 
     if request.method == 'POST':
 
@@ -86,12 +86,16 @@ def iform_update(request, pk=None):
             # saves iform form
             iform = iform_form.save()
 
-            for forms in iform_tag_formset.forms:
-                print('FORMS>>>',forms.data['iform_tag-1-DELETE'], forms.data, dir(forms))
-                iform_tag = forms.save(commit=False)
-                iform_tag.iform = iform
-                iform_tag.save()
-            # iform.save()
+            # first, exclude all tags from the tags queryset
+            IFormTag.objects.filter(iform=iform).delete()
+
+            for tag in iform_tag_formset.forms:
+                # if tags are not marked as Delete ,save them
+                if tag.cleaned_data['DELETE'] != True:
+                    iform_tag = tag.save(commit=False)
+                    iform_tag.iform = iform
+                    iform_tag.save()
+
             messages.add_message(request, messages.SUCCESS, 'Form was succefully updated!')
             return HttpResponseRedirect('/iform/list')
 

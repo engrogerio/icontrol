@@ -50,28 +50,28 @@ class IFormTagForm(forms.ModelForm):
 	class Meta:
 		model = IFormTag
 		exclude = ('created_by', 'created_when', 'id')
-		# fields = [
-		# 	'tag',
-         #    'order',
-		# 	'read_only'
-		# ]
-		# labels = {
-		# 	'tag': 'Name',
-         #    'order': 'Parent',
-		# 	'read_only': 'Read only'
+		fields = [
+			'tag',
+            'order',
+			'read_only'
+		]
+		labels = {
+			'tag': 'Name',
+            'order': 'Order',
+			'read_only': 'Read only'
+		}
+		help_texts = {
+		'order': ('Enter the position of the tag on the form'),
+		}
+		# error_messages = {
+		# 	'tag': {
+		# 		'max_length': ("This name is too long."),
+		# 	}
 		# }
-		# help_texts = {
-		# 'order': ('Enter the position of the tag on the form'),
-		# }
-		# # error_messages = {
-		# # 	'tag': {
-		# # 		'max_length': ("This name is too long."),
-		# # 	}
-		# # }
 		# widgets = {
 		# 	'tag': forms.Select(attrs={'class': 'form-control'}),
 		# 	'order': forms.NumberInput(attrs={'class': 'form-control'}),
-		# 	'read_only': forms.NullBooleanField() #attrs={'class': 'form-control'}),
+		# 	'read_only': forms.NumberInput(attrs={'class': 'form-control'}),
 		# }
 
 IFormTagFormSet = inlineformset_factory(
