@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.views.generic.base import RedirectView
 
 
 urlpatterns = [
+    url(r'^$', RedirectView.as_view(url='/iform/list')),
     url(r'^admin/', admin.site.urls),
     url(r'^tag/', include('apps.tag.urls', namespace='tag')),
     url(r'^iform/', include('apps.iform.urls', namespace='iform')),

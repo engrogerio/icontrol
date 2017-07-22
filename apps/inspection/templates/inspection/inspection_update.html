@@ -6,8 +6,8 @@
     {% csrf_token %}
     {% bootstrap_form form %}
     <div class="form-actions">
-        <button type="submit" class="btn btn-primary" >Submit</button>
-        <a href="{% url 'inspection:inspection_list' %}" class="btn btn-danger">Cancel</a>
+        <button type="submit" class="btn btn-primary btn-sm" >Submit</button>
+        <a href="{% url 'inspection:inspection_list' %}" class="btn btn-danger btn-sm">Cancel</a>
     </div>
 </form>
 {% endblock %}

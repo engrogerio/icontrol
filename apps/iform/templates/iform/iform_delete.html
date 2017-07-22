@@ -4,7 +4,7 @@
 <form method="post">
 	{% csrf_token %}
 	<h3>Do you really want to delete the form {{ object.name }}?</h3>
-	<button class="btn btn-danger" type="submit">Yes, Delete</button>
-	<a class= "btn btn-default" href="{% url 'iform:iform_list' %}">Cancel</a>
+	<button class="btn btn-danger btn-sm" type="submit">Yes, Delete</button>
+	<a class= "btn btn-default btn-sm" href="{% url 'iform:iform_list' %}">Cancel</a>
 </form>
 {% endblock %}

@@ -17,9 +17,9 @@
 			<td>{{ iform.name }}</td>
 			<td>{% for t in iform.tag.all %} {{ t.name }}, {% endfor %}</td>
 			<td>
-				<a class="btn btn-primary" href="{% url 'iform:iform_update' iform.id %}">Update</a>
-				<a class="btn btn-danger" href="{% url 'iform:iform_delete' iform.id %}">Delete</a>
-				<a class="btn btn-success" href="{% url 'inspection:inspection_create' iform.id %}">New Inspection</a>
+				<a class="btn btn-primary btn-sm" href="{% url 'iform:iform_update' iform.id %}">Update</a>
+				<a class="btn btn-danger btn-sm" href="{% url 'iform:iform_delete' iform.id %}">Delete</a>
+				<a class="btn btn-success btn-sm" href="{% url 'inspection:inspection_create' iform.id %}">New Inspection</a>
 			</td>
 		</tr>
 		{% endfor %}

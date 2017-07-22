@@ -52,12 +52,12 @@
 
   <!-- buttons - these live outside of the container, above -->
   <div>
-    <button id="add_more" type="button">Add</button>
+    <button id="add_more" class="btn btn-primary btn-sm" type="button">Add</button>
   </div>
     <p></p>
-        <button class="btn btn-primary" type="submit">Save</button>
-        <button type="reset" class="btn btn-warning" >Reset form</button>
-        <a href="{% url 'iform:iform_list' %}" class="btn btn-danger">Cancel</a>
+        <button class="btn btn-primary btn-sm" type="submit">Save</button>
+        <button type="reset" class="btn btn-warning btn-sm" >Reset form</button>
+        <a href="{% url 'iform:iform_list' %}" class="btn btn-danger btn-sm">Cancel</a>
 </form>
 <script>
     $('#add_more').click(function() {

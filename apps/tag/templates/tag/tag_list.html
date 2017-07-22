@@ -21,8 +21,8 @@
 			<td>{{ tag.get_unit_display }}</td>
 			<td>{{ tag.decimal_places}}</td>
 			<td>
-				<a class="btn btn-primary" href="{% url 'tag:tag_update' tag.id %}">Update</a>
-				<a class="btn btn-danger" href="{% url 'tag:tag_delete' tag.id %}">Delete</a>
+				<a class="btn btn-primary btn-sm" href="{% url 'tag:tag_update' tag.id %}">Update</a>
+				<a class="btn btn-danger btn-sm" href="{% url 'tag:tag_delete' tag.id %}">Delete</a>
 			</td>
 		</tr>
 		{% endfor %}
