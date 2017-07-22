@@ -25,55 +25,49 @@
 	<title>{% block title %}Inventsis{% endblock %}</title>
 </head>
 <body>
-<div class="container">
-	<h2> Inventsis - Enterprise Data Repository</h2>
-	{% block navbar %}
-		<div class="bs-docs-section clearfix">
-		    <div class="row">
-		        <div class="col-lg-12">
-		            <div class="bs-component">
-		            	<nav class="navbar navbar-default">
-		                	<div class="container-fluid">
-		                  		<div class="navbar-header">
-		                    		<a class="navbar-brand" href="{% url 'inspection:inspection_list' %}">Home</a>
-		                  		</div>
-		                  	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-		                    	<ul class="nav navbar-nav">
-
-			                        <li class="dropdown">
-			                        	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Create<span class="caret"></span></a>
-			                        	<ul class="dropdown-menu" role="menu">
-											<li><a href="{% url 'tag:tag_create' %}">Tags</a></li>
-				                        	<li><a href="{% url 'iform:iform_create' %}">Forms</a></li>
-
-			                        	</ul>
-			                        </li>
-		                    	</ul>
-		                    	<ul class="nav navbar-nav ">
-		                        	{% comment %}
-									<li class="dropdown"><a href="http://inventsis.com.br" onclick="pageTracker._link(this.href); return false;">Create Inspection</a>
-		                        	</li>
-									{% endcomment %}
-		                        	<li class="dropdown">
-		                        		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">List<span class="caret"></span></a>
-		                        		<ul class="dropdown-menu" role="menu">
-											<li><a href="{% url 'tag:tag_list' %}">Tags</a></li>
-				                        	<li><a href="{% url 'iform:iform_list' %}">Forms</a></li>
-											<li><a href="{% url 'inspection:inspection_list' %}">Inspections</a></li>
-		                        		</ul>
-		                      		</li>
-		                    	</ul>
-		                    </div>
-		                </div>
-		            </nav>
-		        </div>
-           	</div>
+ <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Enterprise Data Repository</a>
         </div>
-    </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">List <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                  <li><a href="{% url 'tag:tag_list' %}">Tags</a></li>
+                  <li><a href="{% url 'iform:iform_list' %}">Forms</a></li>
+                  <li><a href="{% url 'inspection:inspection_list' %}">Inspections</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Create <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                  <li><a href="{% url 'tag:tag_create' %}">Tags</a></li>
+                  <li><a href="{% url 'iform:iform_create' %}">Forms action</a></li>
+                  <li role="separator" class="divider"></li>
+                  <!--<li class="dropdown-header">Nav header</li>-->
+                  <!--<li><a href="#">Separated link</a></li>-->
+                  <!--<li><a href="#">One more separated link</a></li>-->
+              </ul>
+                  <li class="active"><a href="{% url 'iform:iform_list' %}">Home</a></li>
+                  <li><a href="#about">About</a></li>
+                  <li><a href="mailto:rogerio@inventsis.com.br">Contact</a></li>
+              </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-	{% endblock %}
 
-
+        <div class="container">
 	{% block content %}
 	<h4> Invent sistemas </h4>
 	{% endblock %}

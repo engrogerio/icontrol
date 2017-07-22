@@ -104,7 +104,8 @@ def iform_update(request, pk=None):
         # get iform with the values
         iform_form = IFormForm(instance=iform)
         # get iform_tags formset with the values
-        iform_tag_formset = IFormTagFormSet(instance=iform)
+        iform_tag_formset = IFormTagFormSet(instance=iform,
+                                            queryset=iform.iform_tag.order_by('order'))
     c = {'iform': iform_form, 'iform_tag': iform_tag_formset}
     # c.update(csrf(request)) # for invalidate every request
     return render(request, 'iform/iform_form.html', c)

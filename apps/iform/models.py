@@ -30,6 +30,7 @@ class IFormTag(models.Model):
     order = IntegerField(default=1) # TODO: This must be automatically increased
     read_only = BooleanField(default=False)
 
+
     class Meta:
         # every tag must appears only once on one form
         unique_together = ["iform", "tag"]

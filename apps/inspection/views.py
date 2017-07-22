@@ -81,7 +81,7 @@ def get_data(tag, inspection):
 
     if tag.type == tag.FLOAT:
         try:
-            data = Value.objects.filter(inspection=inspection).get(tag=tag).number
+            data = round(Value.objects.filter(inspection=inspection).get(tag=tag).number,tag.decimal_places)
         except:
             data = None
 
@@ -155,6 +155,7 @@ def inspection_create (request, pk=None):
                 value = Value()
                 data = field.value()
                 tag = Tag.objects.get(id=field.name)
+                value.number = tag
                 value.inspection = inspection
 
                 # finally save the object in db

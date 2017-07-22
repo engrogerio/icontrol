@@ -53,8 +53,7 @@ class Tag(ControlModel):
     decimal_places = IntegerField(default=0)
     max_length = IntegerField(default=0) # 0 means no limit or 1000 characteres
     required = IntegerField('Required', choices=((1, 'Yes'),(0,'No')), default=1)
-    # number_initial_value =
-    # text_initial_value =
+    #default_value = CharField(max_length=1000, null=True, blank=True)
 
     def __str__(self):
         if self.unit:
