@@ -42,10 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
-    'apps.tag',
-    'apps.value',
-    'apps.inspection',
-    'apps.iform',
+    'app.tag',
+    'app.value',
+    'app.inspection',
+    'app.iform',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +63,7 @@ ROOT_URLCONF = 'icontrol.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['apps/control/templates/base'],
+        'DIRS': ['icontrol/templates/base'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

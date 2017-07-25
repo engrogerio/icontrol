@@ -21,7 +21,7 @@ from django.views.generic.base import RedirectView
 urlpatterns = [
     url(r'^$', RedirectView.as_view(url='/iform/list')),
     url(r'^admin/', admin.site.urls),
-    url(r'^tag/', include('apps.tag.urls', namespace='tag')),
-    url(r'^iform/', include('apps.iform.urls', namespace='iform')),
-    url(r'^inspection/', include('apps.inspection.urls', namespace='inspection')),
+    url(r'^tag/', include('app.tag.urls', namespace='tag')),
+    url(r'^iform/', include('app.iform.urls', namespace='iform')),
+    url(r'^inspection/', include('app.inspection.urls', namespace='inspection')),
 ]
