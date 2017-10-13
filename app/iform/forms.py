@@ -2,10 +2,13 @@
 from django import forms
 from django.forms import formset_factory
 from app.iform.models import IForm, IFormTag
+from app.tag.models import Tag
 from django.forms.models import inlineformset_factory
 
 
 class IFormForm(forms.ModelForm):
+    # parent = forms.ModelChoiceField(queryset=IForm.objects.order_by('parent'))
+
     def __init__(self, *args, **kwargs):
         iform_id = kwargs.pop('iform_id', None)
         super(IFormForm, self).__init__(*args, **kwargs)
@@ -42,9 +45,13 @@ class IFormForm(forms.ModelForm):
 
 
 class IFormTagForm(forms.ModelForm):
+
+    tag = forms.ModelChoiceField(queryset=Tag.objects.order_by('name'))
+
     class Meta:
         model = IFormTag
         exclude = ('created_by', 'created_when', 'id')
+
         fields = [
             'order',
             'tag',
@@ -64,11 +71,9 @@ class IFormTagForm(forms.ModelForm):
         # 	}
         # }
         widgets = {
-            'tag': forms.Select(attrs={'class': 'form-control'}),
+            'tag': forms.Select(), #attrs={'class': 'form-control'}),
             'order': forms.NumberInput(attrs={'size': 2}),
-            #'read_only': forms.NumberInput(attrs={'class': 'form-control'}),
         }
-
 
 
 IFormTagFormSet = inlineformset_factory(

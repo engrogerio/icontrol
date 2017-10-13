@@ -12,7 +12,7 @@ class IForm(ControlModel):
     class Meta:
         db_table='iform'
 
-    id = UUIDField(primary_key=True, default=uuid.uuid4,)  # editable=False)
+    id = UUIDField(primary_key=True, default=uuid.uuid4,)
     name = CharField(max_length=255, default='New Form')
     parent = ForeignKey('iform.IForm', null=True, blank=True)
 

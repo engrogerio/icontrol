@@ -6,16 +6,16 @@
 	<thead>
 		<tr>
 			<td>Name</td>
-			<td>Tags</td>
+			<!--<td>Tags</td>-->
 		</tr>
 	</thead>
 	<tbody>
 		{% if object_list %}
-		<h3>Forms Created</h3>
+		<h3>Forms</h3>
 		{% for iform in object_list %}
 		<tr>
 			<td>{{ iform.name }}</td>
-			<td>{% for t in iform.tag.all %} {{ t.name }}, {% endfor %}</td>
+			<!--<td>{% for t in iform.tag %} {{ t.name }}, {% endfor %}</td>-->
 			<td>
 				<a class="btn btn-primary btn-sm" href="{% url 'iform:iform_update' iform.id %}">Update</a>
 				<a class="btn btn-danger btn-sm" href="{% url 'iform:iform_delete' iform.id %}">Delete</a>

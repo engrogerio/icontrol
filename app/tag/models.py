@@ -2,6 +2,9 @@
 from django.db.models import UUIDField, CharField, ForeignKey, IntegerField, DecimalField, ManyToManyField
 import uuid
 from icontrol.models import ControlModel
+import django_tables2 as tables
+from django_tables2.utils import A
+import django_filters
 
 
 class Tag(ControlModel):
@@ -41,5 +44,15 @@ class Tag(ControlModel):
         else:
             return self.name
 
-    def get_tag(self, id):
-        return Tag
+
+class TagTable(tables.Table):
+
+    name = tables.LinkColumn('tag:tag_update', args=[A('pk')]) # link for editing
+    delete = tables.LinkColumn('tag:tag_delete', args=[A('pk')],text='delete',orderable=False) # link for deleting
+
+    class Meta:
+        model = Tag
+        fields = ('name', 'unit', 'max_length', 'required', )
+        attrs = {"class": "table-striped table-bordered"}
+        empty_text = "There are no tags matching the search criteria..."
+
