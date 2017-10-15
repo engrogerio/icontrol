@@ -3,6 +3,7 @@ from django import forms
 # from app.inspection.models import Inspection
 from app.iform.models import IForm, IFormTag
 from app.tag.models import Tag
+from app.value.models import Value
 import datetime
 
 # TODO: shoud I use validators? https://docs.djangoproject.com/en/1.11/ref/validators/
@@ -57,3 +58,14 @@ class InspectionForm(forms.Form):
                                                                required=q.required,
                                                                disabled=iform_tag.read_only
                                                                )
+            elif q.type == q.CHOICES:
+                choices=[]
+                # bring all options based on all values for the tag choosen on choices_source 
+                values = Value.objects.filter(tag=q.choices_source).exclude(text__exact='').order_by('text') #.values_list('text')
+                for n,v in enumerate(values):choices.append([n,v])
+                self.fields['%s' % q.id] = forms.ChoiceField(
+                                                              choices= choices,
+                                                              label=str(q),
+                                                              required=q.required,
+                                                              disabled=iform_tag.read_only,
+                                                              )            

@@ -18,7 +18,7 @@ class Value(ControlModel):
     number = DecimalField(decimal_places=10, max_digits=50, blank=True, null=True)
     text = CharField(max_length=1000, blank=True, null=True)
     inspection =  ForeignKey(Inspection, related_name='values')
-
+    
     def __unicode__(self):
         return str(self.number or self.text)
 

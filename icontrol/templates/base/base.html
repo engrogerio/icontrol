@@ -36,7 +36,8 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">List <span class="caret"></span></a>
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+              aria-expanded="false">List <span class="caret"></span></a>
               <ul class="dropdown-menu">
                   <li><a href="{% url 'tag:tag_list' %}">Tags</a></li>
                   <li><a href="{% url 'iform:iform_list' %}">Forms</a></li>
@@ -44,7 +45,8 @@
               </ul>
             </li>
             <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Create <span class="caret"></span></a>
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+              aria-expanded="false">Create <span class="caret"></span></a>
               <ul class="dropdown-menu">
                   <li><a href="{% url 'tag:tag_create' %}">Tags</a></li>
                   <li><a href="{% url 'iform:iform_create' %}">Forms</a></li>
@@ -53,9 +55,26 @@
                   <!--<li><a href="#">Separated link</a></li>-->
                   <!--<li><a href="#">One more separated link</a></li>-->
               </ul>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+              aria-expanded="false">Status<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                  {% if user.is_authenticated %}
+                    <li class="navbar-text">Logged as
+                        {{ user.get_username }}
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>   
+                  {% else %}
+                    <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>   
+                  {% endif %} 
+              
+                  <li><a href="#">Settings</a></li>
+              </ul>
+            </li>
                   <li><a href="{% url 'iform:iform_list' %}">Home</a></li>
-                  <li><a href="#about">About</a></li>
                   <li><a href="mailto:rogerio@inventsis.com.br">Contact</a></li>
+                 
               </li>
           </ul>
         </div>

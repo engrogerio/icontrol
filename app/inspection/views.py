@@ -10,15 +10,16 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from app.value.models import Value
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-
-class InspectionList(ListView):
+class InspectionList(LoginRequiredMixin, ListView):
     model = Inspection
     template_name = 'inspection/inspection_list.html'
     paginate_by = 6
 
 
-class InspectionDelete(DeleteView):
+class InspectionDelete(LoginRequiredMixin, DeleteView):
     model = Inspection
     template_name = 'inspection/inspection_delete.html'
     success_url = reverse_lazy('inspection:inspection_list')
@@ -46,7 +47,7 @@ def add_data(tag, value, data, inspection):
         number = INTEGER/FLOAT
         text = ''
 
-    REFERENCE: TODO
+    CHOICE: TODO
     """
 
     number = None
@@ -60,6 +61,8 @@ def add_data(tag, value, data, inspection):
         number = float(data) if data else None
     elif tag.type == tag.INTEGER:
         number = int(data) if data else None
+    elif tag.type == tag.CHOICES:
+        text = str(data)
     else:
         number = int(data) if data else None
         text = str(data)
@@ -73,7 +76,8 @@ def add_data(tag, value, data, inspection):
 
 def get_data(tag, inspection):
     data = None
-    if tag.type in (tag.TEXT, tag.DATETIME, tag.TIME, tag.DATE, tag.BOOL):
+    
+    if tag.type in (tag.TEXT, tag.DATETIME, tag.TIME, tag.DATE, tag.BOOL, tag.CHOICES):
         try:
             data = Value.objects.filter(inspection=inspection).get(tag=tag).text
         except:
@@ -93,6 +97,7 @@ def get_data(tag, inspection):
 
     return data
 
+@login_required
 def inspection_update (request, pk=None):
     # get the inspection being updated
     inspection = Inspection.objects.get(id=pk)
@@ -138,6 +143,7 @@ def inspection_update (request, pk=None):
 
     return render(request, 'inspection/inspection_update.html', {'form': form, 'iform': iform.name})
 
+@login_required
 def inspection_create (request, pk=None):
     # get iform for the new inspection
     iform = IForm.objects.get(id=pk)
@@ -148,6 +154,7 @@ def inspection_create (request, pk=None):
             # creates a new inspection based on the iform
             inspection = Inspection()
             inspection.iform = iform
+            inspection.created_by = request.user
             inspection.save()
 
             # creates new Values for each field and save to the database

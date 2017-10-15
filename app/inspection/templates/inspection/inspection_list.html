@@ -8,6 +8,7 @@
 			<td>id</td>
 			<td>form</td>
 			<td>created when</td>
+			<td>created by</td>
 		</tr>
 	</thead>
 	<tbody>
@@ -18,7 +19,7 @@
 			<td>{{ inspection.id }}</td>
 			<td>{{ inspection.iform }}</td>
 			<td>{{ inspection.created_when }}</td>
-
+			<td>{{ inspection.created_by }}</td>
 
 			<td>
 				<a class="btn btn-primary btn-sm" href="{% url 'inspection:inspection_update' inspection.id %}">Update</a>

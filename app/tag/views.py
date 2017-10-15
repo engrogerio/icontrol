@@ -5,12 +5,13 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django_tables2 import RequestConfig
 from app.tag.models import Tag, TagTable
 from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def TagIndex(request):
     return HttpResponse ('Tag list')
 
 
-class TagList(ListView):
+class TagList(LoginRequiredMixin, ListView):
     model = Tag
     context_name = 'tag'
     ordering = ['name']
@@ -32,21 +33,32 @@ class TagList(ListView):
     # # paginate_by = 60
 
 
-class TagCreate(CreateView):
+class TagCreate(LoginRequiredMixin, CreateView ):
+    model = Tag
+    template_name = 'tag/tag_form.html'
+    form_class = TagForm
+    success_url = reverse_lazy('tag:tag_list')
+
+    # def get_context_data(self, **kwargs):
+    # # To get current user
+    #     c = super(TagCreate, self).get_context_data(**kwargs)
+    #     self user = self.request.user
+    #     return c
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.user = self.request.user
+        print('@@@@@@@@@@@@@@@@@@', instance.user)
+        instance.save()
+
+class TagUpdate(LoginRequiredMixin, UpdateView):
     model = Tag
     template_name = 'tag/tag_form.html'
     form_class = TagForm
     success_url = reverse_lazy('tag:tag_list')
 
 
-class TagUpdate(UpdateView):
-    model = Tag
-    template_name = 'tag/tag_form.html'
-    form_class = TagForm
-    success_url = reverse_lazy('tag:tag_list')
-
-
-class TagDelete(DeleteView):
+class TagDelete(LoginRequiredMixin, DeleteView):
     model = Tag
     template_name = 'tag/tag_delete.html'
     form_class = TagForm

@@ -15,7 +15,7 @@ class Tag(ControlModel):
     TEXT = 1
     INTEGER = 2
     FLOAT = 3
-    REFERENCE = 4
+    CHOICES = 4
     BOOL = 5
     DATE = 6
     TIME = 7
@@ -23,7 +23,7 @@ class Tag(ControlModel):
     MONEY = 9
 
     TYPE_CHOICES = ((TEXT, 'Text'), (INTEGER, 'Integer Number'), (FLOAT, 'Float Point Number'),
-                    (REFERENCE, 'Reference'), (BOOL, 'Yes/No'), (DATE, 'Date'), (TIME, 'Time'),
+                    (CHOICES, 'Choices'), (BOOL, 'Yes/No'), (DATE, 'Date'), (TIME, 'Time'),
                     (DATETIME, 'Date and Time')
                     )
 
@@ -36,7 +36,8 @@ class Tag(ControlModel):
     decimal_places = IntegerField(default=0)
     max_length = IntegerField(default=0) # 0 means no limit or 1000 characteres
     required = IntegerField('Required', choices=((1, 'Yes'),(0,'No')), default=1)
-    #default_value = CharField(max_length=1000, null=True, blank=True)
+    default_value = CharField(max_length=1000, null=True, blank=True)
+    choices_source = ForeignKey('Tag', blank=True, null=True)
 
     def __unicode__(self):
         if self.unit:

@@ -9,32 +9,37 @@ from app.iform.models import IForm, IFormTag
 from django.contrib import messages
 from django.forms import inlineformset_factory
 from app.iform.forms import IFormTagForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 def IFormIndex(request):
     return HttpResponse ('Form list')
 
 
-class IFormList(ListView):
+class IFormList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = ('iform.change_iform',) 
     model = IForm
     template_name = 'iform/iform_list.html'
     paginate_by = 6
 
 
-class IFormDelete(DeleteView):
+class IFormDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = IForm
     form_class = IFormForm
     template_name = 'iform/iform_delete.html'
     success_url = reverse_lazy('iform:iform_list')
 
-
+@login_required
 def iform_create (request):
 
     IFormTagFormSet = inlineformset_factory(IForm, IFormTag, form=IFormTagForm, extra=1)
 
     if request.method == 'POST':
-
+       
         # Create a blank Iform form with empty fields
         iform_form = IFormForm(request.POST)
+        iform_form.created_by = request.user
         # Create a blank formset from the tags related to the iform
         iform_tag_formset = IFormTagFormSet(request.POST)
 
@@ -59,7 +64,7 @@ def iform_create (request):
     # c.update(csrf(request)) # for invalidate every request
     return render(request, 'iform/iform_form.html', c)
 
-
+@login_required
 def iform_update(request, pk=None):
     # get iform being updated
     iform = IForm.objects.get(id=pk)
