@@ -25,6 +25,7 @@ class IFormList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
 
 class IFormDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = ('iform.delete_iform',) 
     model = IForm
     form_class = IFormForm
     template_name = 'iform/iform_delete.html'
@@ -32,7 +33,6 @@ class IFormDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 
 @login_required
 def iform_create (request):
-
     IFormTagFormSet = inlineformset_factory(IForm, IFormTag, form=IFormTagForm, extra=1)
 
     if request.method == 'POST':

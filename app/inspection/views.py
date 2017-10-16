@@ -16,7 +16,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 class InspectionList(LoginRequiredMixin, ListView):
     model = Inspection
     template_name = 'inspection/inspection_list.html'
-    paginate_by = 6
+    paginate_by = 20
 
 
 class InspectionDelete(LoginRequiredMixin, DeleteView):
