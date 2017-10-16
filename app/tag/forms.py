@@ -6,7 +6,8 @@ from app.tag.models import Tag
 
 class TagForm(forms.ModelForm):
 
-    choices_source = forms.ModelChoiceField(queryset=Tag.objects.order_by('name'))
+    choices_source = forms.ModelChoiceField(required=False, queryset=Tag.objects.order_by('name'),
+    widget=forms.Select(attrs={'class':'form-control'}))
 
     class Meta:
         model = Tag
@@ -30,9 +31,9 @@ class TagForm(forms.ModelForm):
         }
         widgets = {
         'name': forms.TextInput(attrs={'class':'form-control'}),
-        'type': forms.Select(attrs={'class':'form-control'}), #widgets=forms.RadioSelect, choices=Tag.TYPE_CHOICES), #attrs={'class':'form-control'}),
-        'choices_source': forms.Select(attrs={'class':'form-control'}),
-        'unit': forms.Select(attrs={'class':'form-control'}), #(attrs={'class':'form-control'}),
+        'type': forms.Select(attrs={'class':'form-control'}), 
+        #'choices_source': forms.Select(attrs={'class':'form-control'}),
+        'unit': forms.Select(attrs={'class':'form-control'}),
         'decimal_places': forms.NumberInput(attrs={'class':'form-control'}),
         'max_length': forms.NumberInput(attrs={'class':'form-control'}),
         'required': forms.Select(attrs={'class':'form-control'}),
