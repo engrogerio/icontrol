@@ -53,7 +53,7 @@ def iform_create (request):
                 iform_tag.save()
             #iform.save()
             messages.add_message(request, messages.SUCCESS, 'Form was succefully created!')
-            return HttpResponseRedirect('/iform/list')
+            return HttpResponseRedirect('iform/list')
 
     if request.method == 'GET':
         # create empty fields for iform
@@ -100,7 +100,7 @@ def iform_update(request, pk=None):
                     iform_tag.iform = iform
                     iform_tag.save()
             messages.add_message(request, messages.SUCCESS, 'Form was succefully updated!')
-            return HttpResponseRedirect('/iform/list')
+            return HttpResponseRedirect('iform/list')
 
     if request.method == 'GET':
 
