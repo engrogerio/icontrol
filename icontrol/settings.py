@@ -137,9 +137,9 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-# Redirect to home URL after login (Default redirects to /accounts/profile/)
-LOGIN_REDIRECT_URL = '/iform/list'
+# Redirect to home URL after login (Default redirects to accounts/profile/)
+LOGIN_REDIRECT_URL = 'iform/list'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-LOGIN_URL = '/accounts/login'
+LOGIN_URL = 'accounts/login'
