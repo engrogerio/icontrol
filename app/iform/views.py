@@ -98,7 +98,8 @@ def iform_update(request, pk=None):
                     iform_tag.iform = iform
                     iform_tag.save()
             messages.add_message(request, messages.SUCCESS, 'Form was succefully updated!')
-            return HttpResponseRedirect('/iform/list')
+            return HttpResponseRedirect(reverse('iform:iform_list'))
+            
 
     if request.method == 'GET':
 

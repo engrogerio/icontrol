@@ -121,7 +121,7 @@ def inspection_update (request, pk=None):
                 data = field.value()
                 add_data(tag, value, data, inspection)
 
-            return HttpResponseRedirect('/inspection/list')
+            return HttpResponseRedirect(reverse('iform:iform_list'))
 
     if request.method == 'GET':
         # iterate iform fields and get types / values
@@ -168,7 +168,7 @@ def inspection_create (request, pk=None):
                 # finally save the object in db
                 add_data(tag, value, data, inspection)
             messages.add_message(request, messages.SUCCESS, 'Inspection was succefully created!')
-            return HttpResponseRedirect('/iform/list')
+            return HttpResponseRedirect(reverse('iform:iform_list'))
     if request.method == 'GET':
         # passing the iform id to form so the form knows which fields to show
         form = InspectionForm(iform_id=pk)  # raise Http404
