@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 from django.db.models import CharField, ForeignKey, DecimalField
 from icontrol.models import ControlModel
 from app.tag.models import Tag
@@ -20,6 +21,4 @@ class Value(ControlModel):
     inspection =  ForeignKey(Inspection, related_name='values')
     
     def __unicode__(self):
-        return str(self.number or self.text)
-
-
+        return self.text or str(self.number)

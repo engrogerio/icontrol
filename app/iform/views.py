@@ -51,9 +51,9 @@ def iform_create (request):
                 iform_tag = forms.save(commit=False)
                 iform_tag.iform = iform
                 iform_tag.save()
-            #iform.save()
+           
             messages.add_message(request, messages.SUCCESS, 'Form was succefully created!')
-            return HttpResponseRedirect('iform/list')
+            return HttpResponseRedirect(reverse('iform:iform_list'))
 
     if request.method == 'GET':
         # create empty fields for iform
@@ -73,8 +73,6 @@ def iform_update(request, pk=None):
     iform_form = IFormForm(request.POST, instance=iform)
 
     # get the iform_tags form instance
-
-
     IFormTagFormSet = inlineformset_factory(IForm, IFormTag, form=IFormTagForm, extra=0)
 
     if request.method == 'POST':
@@ -100,7 +98,7 @@ def iform_update(request, pk=None):
                     iform_tag.iform = iform
                     iform_tag.save()
             messages.add_message(request, messages.SUCCESS, 'Form was succefully updated!')
-            return HttpResponseRedirect('iform/list')
+            return HttpResponseRedirect('/iform/list')
 
     if request.method == 'GET':
 

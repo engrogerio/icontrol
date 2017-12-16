@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
@@ -19,6 +20,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 #Project_root = Settings.py directory
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+
+SERVER_URL = '/icontrol'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -65,7 +68,7 @@ ROOT_URLCONF = 'icontrol.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['icontrol/templates/base','icontrol/templates'],
+        'DIRS': ['icontrol/templates/base', 'icontrol/templates', ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -138,8 +141,8 @@ STATICFILES_DIRS = (
 )
 
 # Redirect to home URL after login (Default redirects to accounts/profile/)
-LOGIN_REDIRECT_URL = 'iform/list'
+LOGIN_REDIRECT_URL = '/iform/list'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-LOGIN_URL = 'accounts/login'
+LOGIN_URL = '/accounts/login'

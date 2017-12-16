@@ -20,11 +20,12 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    url(r'^$', RedirectView.as_view(url='iform/list')),
-    url(r'^admin/', admin.site.urls),
-    url(r'^tag/', include('app.tag.urls', namespace='tag')),
-    url(r'^iform/', include('app.iform.urls', namespace='iform')),
-    url(r'^inspection/', include('app.inspection.urls', namespace='inspection')),
-    url(r'^admin/', admin.site.urls),
-    url(r'^accounts/', include('django.contrib.auth.urls')),
+    # url(r'^icontrol/', include ([
+        url(r'^$', RedirectView.as_view(url='iform/list')),
+        url(r'^tag/', include('app.tag.urls', namespace='tag')),
+        url(r'^iform/', include('app.iform.urls', namespace='iform')),
+        url(r'^inspection/', include('app.inspection.urls', namespace='inspection')),
+        url(r'^admin/', admin.site.urls),
+        url(r'^accounts/', include('django.contrib.auth.urls')),
+   # ]))
 ]

@@ -25,6 +25,7 @@ class TagList(LoginRequiredMixin, ListView):
         context['filter'] = filter
         RequestConfig(self.request, paginate={'per_page': 30}).configure(table)
         context['table'] = table
+        context['iform'] = 'iForm'
         return context
 
     # RequestConfig(request).configure(table)

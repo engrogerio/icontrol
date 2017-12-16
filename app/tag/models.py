@@ -5,7 +5,7 @@ from icontrol.models import ControlModel
 import django_tables2 as tables
 from django_tables2.utils import A
 import django_filters
-
+from app.iform.models import IFormTag
 
 class Tag(ControlModel):
 
@@ -45,12 +45,17 @@ class Tag(ControlModel):
         else:
             return self.name
 
+    #@property
+    def form(self):
+        print('***********', self.iformtag_tag__iform__name)
+        return self.iformtag_tag__iform__name
 
 class TagTable(tables.Table):
 
     name = tables.LinkColumn('tag:tag_update', args=[A('pk')]) # link for editing
     delete = tables.LinkColumn('tag:tag_delete', args=[A('pk')],text='delete',orderable=False) # link for deleting
 
+    
     class Meta:
         model = Tag
         fields = ('name', 'unit', 'max_length', 'required', )

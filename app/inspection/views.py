@@ -1,4 +1,4 @@
-# -*- coding=utf-8 *-*
+# -*- coding: utf-8 -*-
 
 from app.inspection.forms import InspectionForm
 from django.core.urlresolvers import reverse_lazy
@@ -56,7 +56,7 @@ def add_data(tag, value, data, inspection):
     if tag.type == tag.BOOL:
         text = str(data)
     elif tag.type in (tag.TEXT, tag.DATETIME, tag.TIME, tag.DATE):
-        text = str(data)
+        text = data.encode('utf-8')
     elif tag.type == tag.FLOAT:
         number = float(data) if data else None
     elif tag.type == tag.INTEGER:
@@ -176,3 +176,30 @@ def inspection_create (request, pk=None):
         print(request.method)
 
     return render(request, 'inspection/inspection_create.html', {'form': form, 'iform': iform.name})
+
+# from django.views.generic import TemplateView
+# from django.contrib.auth.models import User
+
+# import arrow
+
+
+# class AnalyticsIndexView(TemplateView):
+#     template_name = 'analytics/admin/index.html'
+
+#     def get_context_data(self, **kwargs):
+#         context = super(AnalyticsIndexView, self).get_context_data(**kwargs)
+#         context['30_day_registrations'] = self.thirty_day_registrations()
+#         return context
+
+#     def thirty_day_registrations(self):
+#         final_data = []
+
+#         date = arrow.now()
+#         for day in xrange(1, 30):
+#             date = date.replace(days=-1)
+#             count = User.objects.filter(
+#                 date_joined__gte=date.floor('day').datetime,
+#                 date_joined__lte=date.ceil('day').datetime).count()
+#             final_data.append(count)
+
+#         return final_data

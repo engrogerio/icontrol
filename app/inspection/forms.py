@@ -1,4 +1,5 @@
-# -*- encoding:utf-8 -*-
+# -*- coding: utf-8 -*-
+
 from django import forms
 # from app.inspection.models import Inspection
 from app.iform.models import IForm, IFormTag
@@ -15,7 +16,7 @@ class InspectionForm(forms.Form):
         iform_id = kwargs.pop('iform_id', None)
         iform = IForm.objects.get(id=iform_id)
         tag_list = IForm.objects.get(pk=iform_id).iform_tag.all().values('tag')
-        tags = Tag.objects.filter(pk__in=tag_list).filter(iform_tag__iform=iform).order_by('iform_tag__order')
+        tags = Tag.objects.filter(pk__in=tag_list).filter(iform_tag_tag__iform=iform).order_by('iform_tag_tag__order')
         super(InspectionForm, self).__init__(*args, **kwargs)
         for i, q in enumerate(tags):
             iform_tag=IFormTag.objects.filter(iform=iform).get(tag=q)

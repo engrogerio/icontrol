@@ -25,8 +25,8 @@ class IFormTag(models.Model):
     class Meta:
         db_table='iform_tag'
 
-    iform = ForeignKey(IForm, related_name='iform_tag')
-    tag = ForeignKey('tag.Tag', related_name='iform_tag')
+    iform = ForeignKey(IForm, related_name='iform_tag') 
+    tag = ForeignKey('tag.Tag', related_name='iform_tag_tag')
     order = IntegerField(default=1) # TODO: This must be automatically increased
     read_only = BooleanField(default=False)
 
