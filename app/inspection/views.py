@@ -12,6 +12,7 @@ from django.contrib import messages
 from app.value.models import Value
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.urlresolvers import reverse
 
 class InspectionList(LoginRequiredMixin, ListView):
     model = Inspection
