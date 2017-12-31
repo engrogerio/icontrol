@@ -12,29 +12,34 @@ class TagForm(forms.ModelForm):
     class Meta:
         model = Tag
         fields = [
+        'parent',
         'name',
+        'help_text',
         'type',
         'choices_source',
         'unit',
         'decimal_places',
         'max_length',
-        'required'
         ]
         labels = {
+        'parent': 'Parent',
         'name': 'Name',
+        'help_text':'Help Text',
         'type': 'Type',
         'choices_source': 'Choices Source',
         'unit': 'Unit',
         'decimal_places': 'Decimal Places',
         'max_length': 'Maximum Length',
-        'required': 'Is required',
+
         }
         widgets = {
+        'parent': forms.Select(attrs={'class':'form-control'}), 
         'name': forms.TextInput(attrs={'class':'form-control'}),
+        'help_text': forms.TextInput(attrs={'class':'form-control'}),
         'type': forms.Select(attrs={'class':'form-control'}), 
-        #'choices_source': forms.Select(attrs={'class':'form-control'}),
+        'choices_source': forms.Select(attrs={'class':'form-control'}),
         'unit': forms.Select(attrs={'class':'form-control'}),
         'decimal_places': forms.NumberInput(attrs={'class':'form-control'}),
         'max_length': forms.NumberInput(attrs={'class':'form-control'}),
-        'required': forms.Select(attrs={'class':'form-control'}),
+
       }

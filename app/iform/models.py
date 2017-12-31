@@ -29,7 +29,9 @@ class IFormTag(models.Model):
     tag = ForeignKey('tag.Tag', related_name='iform_tag_tag')
     order = IntegerField(default=1) # TODO: This must be automatically increased
     read_only = BooleanField(default=False)
-
+    required = BooleanField(default=False)
+    default_value = CharField(max_length=1000, null=True, blank=True)
+    help_text = CharField(max_length=1000, null=True, blank=True)
 
     class Meta:
         # every tag must appears only once on one form

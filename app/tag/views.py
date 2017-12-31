@@ -52,6 +52,7 @@ class TagCreate(LoginRequiredMixin, CreateView ):
         instance.save()
         return super(TagCreate, self).form_valid(form)
 
+
 class TagUpdate(LoginRequiredMixin, UpdateView):
     model = Tag
     template_name = 'tag/tag_form.html'

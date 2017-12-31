@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'app.value',
     'app.inspection',
     'app.iform',
+    'djmoney',
 ]
 
 MIDDLEWARE = [
@@ -68,7 +69,11 @@ ROOT_URLCONF = 'icontrol.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['icontrol/templates/base', 'icontrol/templates', ],
+        'DIRS': [
+                'icontrol/templates', 
+                'icontrol/templates/base', 
+                'icontrol/templates/registration', 
+                ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

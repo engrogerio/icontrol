@@ -55,12 +55,16 @@ class IFormTagForm(forms.ModelForm):
         fields = [
             'order',
             'tag',
-            'read_only'
+            'read_only',
+            'required',
+            'default_value',
         ]
         labels = {
             'tag': 'Name',
             'order': 'Order',
-            'read_only': 'Read only'
+            'read_only': 'Read only',
+            'required': 'Is required',
+            'default_value': 'Default Value',
         }
         help_texts = {
             'order': ('Enter the position of the tag on the form'),
@@ -73,6 +77,8 @@ class IFormTagForm(forms.ModelForm):
         widgets = {
             'tag': forms.Select(), #attrs={'class': 'form-control'}),
             'order': forms.NumberInput(attrs={'size': 2}),
+            #'required': forms.Select(attrs={'class':'form-control'}),
+            'default_value': forms.TextInput(attrs={'class':'form-control'}),
         }
 
 

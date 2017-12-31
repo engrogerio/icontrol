@@ -56,13 +56,14 @@ def add_data(tag, value, data, inspection):
 
     if tag.type == tag.BOOL:
         text = str(data)
-    elif tag.type in (tag.TEXT, tag.DATETIME, tag.TIME, tag.DATE):
+    elif tag.type in (tag.TEXT, tag.LARGE_TEXT, tag.TEXT, tag.DATETIME, tag.TIME, tag.DATE, 
+                        tag.SECTION,):
         text = data.encode('utf-8')
     elif tag.type == tag.FLOAT:
         number = float(data) if data else None
     elif tag.type == tag.INTEGER:
         number = int(data) if data else None
-    elif tag.type == tag.CHOICES:
+    elif tag.type in (tag.CHOICES, tag.RADIO):
         text = str(data)
     else:
         number = int(data) if data else None
@@ -78,7 +79,7 @@ def add_data(tag, value, data, inspection):
 def get_data(tag, inspection):
     data = None
     
-    if tag.type in (tag.TEXT, tag.DATETIME, tag.TIME, tag.DATE, tag.BOOL, tag.CHOICES):
+    if tag.type in (tag.TEXT, tag.LARGE_TEXT, tag.DATETIME, tag.TIME, tag.DATE, tag.BOOL, tag.CHOICES, tag.RADIO):
         try:
             data = Value.objects.filter(inspection=inspection).get(tag=tag).text
         except:
