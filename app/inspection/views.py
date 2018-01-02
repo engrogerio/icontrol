@@ -56,8 +56,9 @@ def add_data(tag, value, data, inspection):
 
     if tag.type == tag.BOOL:
         text = str(data)
-    elif tag.type in (tag.TEXT, tag.LARGE_TEXT, tag.TEXT, tag.DATETIME, tag.TIME, tag.DATE, 
+    elif tag.type in (tag.TEXT, tag.LARGE_TEXT, tag.DATETIME, tag.TIME, tag.DATE, 
                         tag.SECTION,):
+        print ('*********', data)
         text = data.encode('utf-8')
     elif tag.type == tag.FLOAT:
         number = float(data) if data else None
@@ -79,7 +80,8 @@ def add_data(tag, value, data, inspection):
 def get_data(tag, inspection):
     data = None
     
-    if tag.type in (tag.TEXT, tag.LARGE_TEXT, tag.DATETIME, tag.TIME, tag.DATE, tag.BOOL, tag.CHOICES, tag.RADIO):
+    if tag.type in (tag.TEXT, tag.LARGE_TEXT, tag.DATETIME, tag.TIME, tag.DATE, tag.BOOL, 
+        tag.CHOICES, tag.RADIO, tag.SECTION):
         try:
             data = Value.objects.filter(inspection=inspection).get(tag=tag).text
         except:
@@ -112,6 +114,8 @@ def inspection_update (request, pk=None):
         form = InspectionForm(request.POST, iform_id=iform.id)
         if form.is_valid():
             for field in form:
+                # section type tag, is not being persisted on the database
+                
                 tag = Tag.objects.get(id=field.name)
                 # try to recover data from Value instance, but if can't, that is due to the tag was created
                 # after this inspection had been created. So, its created a new Value instance.

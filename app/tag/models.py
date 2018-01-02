@@ -58,8 +58,7 @@ class Tag(ControlModel):
             return self.name
 
     #@property
-    def form(self):
-        print('***********', self.iformtag_tag__iform__name)
+    def form(self):    
         return self.iformtag_tag__iform__name
 
 class TagTable(tables.Table):
