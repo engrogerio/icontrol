@@ -70,9 +70,9 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-                'icontrol/templates', 
-                'icontrol/templates/base', 
-                'icontrol/templates/registration', 
+                'templates', 
+                'templates/base', 
+                'templates/registration', 
                 ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -81,6 +81,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'app.tag.context_processors.add_variable_to_context',
 
             ],
         },

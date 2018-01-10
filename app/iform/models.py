@@ -31,7 +31,7 @@ class IFormTag(models.Model):
     read_only = BooleanField(default=False)
     required = BooleanField(default=False)
     default_value = CharField(max_length=1000, null=True, blank=True)
-    help_text = CharField(max_length=1000, null=True, blank=True)
+    width = IntegerField(default=100)
 
     class Meta:
         # every tag must appears only once on one form

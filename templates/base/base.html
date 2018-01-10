@@ -33,42 +33,83 @@
           </button>
           <a class="navbar-brand" href="{% url 'iform:iform_list' %}">Enterprise Data Repository</a>
         </div>
+
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
-              aria-expanded="false">List <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                  <li><a href="{% url 'tag:tag_list' %}">Tags</a></li>
-                  <li><a href="{% url 'iform:iform_list' %}">Forms</a></li>
-                  <li><a href="{% url 'inspection:inspection_list' %}">Inspections</a></li>
-              </ul>
-            </li>
+                <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+                  aria-expanded="true">Tags <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li class="dropdown">
+                      <li><a href="{% url 'tag:tag_create' %}"><strong>Create new Tag</strong></a></li>
+                      <li role="separator" class="divider"></li>
+                      {% for tag in tags %}
+                        <li><a href="{% url 'tag:tag_update' tag.id %}">{{ tag.name }}</a></li>
+                      {% endfor %}
+                      </li>
+                  </ul>
+                </li>
+              
+                <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+                  aria-expanded="true">Forms <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li class="dropdown">
+                      <li><a href="{% url 'iform:iform_create' %}"><strong>Create new Form</strong></a></li>
+                      <li role="separator" class="divider"></li>
+                      {% for iform in iforms %}
+                        <li><a href="{% url 'iform:iform_update' iform.id %}">{{ iform.name }}</a></li>
+                      {% endfor %}
+                      </li>
+                  </ul>
+                </li>
+
+                <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+                  aria-expanded="true">New Inspection <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li class="dropdown">
+                      {% for iform in iforms %}
+                        <li><a href="{% url 'inspection:inspection_create' iform.id %}">{{ iform.name }}</a></li>
+                      {% endfor %}
+                      </li>
+                  </ul>
+                </li>
+
+            <li><a href="{% url 'inspection:inspection_list' %}">Data Collections</a></li>
+<!-- 
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
               aria-expanded="false">Create <span class="caret"></span></a>
               <ul class="dropdown-menu">
                   <li><a href="{% url 'tag:tag_create' %}">Tags</a></li>
                   <li><a href="{% url 'iform:iform_create' %}">Forms</a></li>
-                  <li role="separator" class="divider"></li>
+                  <li role="separator" class="divider"></li> -->
                   <!--<li class="dropdown-header">Nav header</li>-->
                   <!--<li><a href="#">Separated link</a></li>-->
                   <!--<li><a href="#">One more separated link</a></li>-->
-              </ul>
+              <!-- </ul>
+              </li>  -->
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
               aria-expanded="false">Status<span class="caret"></span></a>
               <ul class="dropdown-menu">
+
+
                   {% if user.is_authenticated %}
                     <li class="navbar-text">Logged as
                         {{ user.get_username }}
                     </li>
-                    <li role="separator" class="divider"></li>
+                  {% endif %}
+
+                  <li role="separator" class="divider"></li>
+                    
+                  {% if user.is_authenticated %}                    
                     <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>   
                   {% else %}
                     <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>   
                   {% endif %} 
-              
+                  <li role="separator" class="divider"></li>
                   <li><a href="#">Settings</a></li>
               </ul>
             </li>

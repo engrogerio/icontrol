@@ -58,7 +58,6 @@ def add_data(tag, value, data, inspection):
         text = str(data)
     elif tag.type in (tag.TEXT, tag.LARGE_TEXT, tag.DATETIME, tag.TIME, tag.DATE, 
                         tag.SECTION,):
-        print ('*********', data)
         text = data.encode('utf-8')
     elif tag.type == tag.FLOAT:
         number = float(data) if data else None
@@ -114,7 +113,7 @@ def inspection_update (request, pk=None):
         form = InspectionForm(request.POST, iform_id=iform.id)
         if form.is_valid():
             for field in form:
-                # section type tag, is not being persisted on the database
+                # TODO: section type tag, is not being persisted on the database
                 
                 tag = Tag.objects.get(id=field.name)
                 # try to recover data from Value instance, but if can't, that is due to the tag was created

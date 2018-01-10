@@ -31,7 +31,8 @@ class Tag(ControlModel):
 
     TYPE_CHOICES = ((TEXT, 'Text'), (INTEGER, 'Integer Number'), (FLOAT, 'Float Point Number'),
                     (CHOICES, 'Choices'), (BOOL, 'Yes/No'), (DATE, 'Date'), (TIME, 'Time'),
-                    (DATETIME, 'Date and Time'), (MONEY, 'Money'), (FILE, 'File'), (SECTION, 'Section'),
+                    (DATETIME, 'Date and Time'), # (MONEY, 'Money'), 
+                    (FILE, 'File'), (SECTION, 'Section'),
                     (LARGE_TEXT, 'Large Text'), (RADIO, 'Radio Button'),
                     )
 

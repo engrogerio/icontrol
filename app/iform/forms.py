@@ -55,19 +55,25 @@ class IFormTagForm(forms.ModelForm):
         fields = [
             'order',
             'tag',
+            'default_value',
+            'width',
             'read_only',
             'required',
-            'default_value',
         ]
         labels = {
             'tag': 'Name',
             'order': 'Order',
             'read_only': 'Read only',
-            'required': 'Is required',
+            'required': 'Required',
             'default_value': 'Default Value',
         }
         help_texts = {
             'order': ('Enter the position of the tag on the form'),
+            'tag': ('Choose the tag'),
+            'default_value': ('Enter the default value for this tag on this form'),
+            'width': ('Enter the width of this field on the form'),
+            'read_only': ('Enter the position of the tag on the form'),
+            'required': ('Mark if user should enter a value'),
         }
         # error_messages = {
         # 	'tag': {
@@ -76,9 +82,10 @@ class IFormTagForm(forms.ModelForm):
         # }
         widgets = {
             'tag': forms.Select(), #attrs={'class': 'form-control'}),
-            'order': forms.NumberInput(attrs={'size': 2}),
+            'order': forms.NumberInput(attrs={'style': 'width:100'}),
             #'required': forms.Select(attrs={'class':'form-control'}),
             'default_value': forms.TextInput(attrs={'class':'form-control'}),
+            'width': forms.NumberInput(attrs={'style': 'width:100'})
         }
 
 
