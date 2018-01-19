@@ -9,6 +9,10 @@ class ControlModel(models.Model):
 
     class Meta:
         abstract = True
+
     created_by = ForeignKey(User, null=True, blank=True)
-    date_created = DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
+    # updated_by = ForeignKey(User, null=True, blank=True)
+    created_when = DateTimeField(auto_now_add=True)
+    updated_when = DateTimeField(auto_now=True)
+
+     

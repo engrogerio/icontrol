@@ -4,17 +4,20 @@ from django.db.models import UUIDField, ManyToManyField, CharField, IntegerField
 import uuid
 from icontrol.models import ControlModel
 from django.db import models
-
+from mptt.models import MPTTModel, TreeForeignKey
 
 # Create your models here.
-class IForm(ControlModel):
+class IForm(MPTTModel, ControlModel):
 
     class Meta:
         db_table='iform'
 
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
     id = UUIDField(primary_key=True, default=uuid.uuid4,)
     name = CharField(max_length=255, default='New Form')
-    parent = ForeignKey('iform.IForm', null=True, blank=True)
+    parent = parent = TreeForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
 
     def __unicode__(self):
         return self.name
@@ -31,7 +34,7 @@ class IFormTag(models.Model):
     read_only = BooleanField(default=False)
     required = BooleanField(default=False)
     default_value = CharField(max_length=1000, null=True, blank=True)
-    width = IntegerField(default=100)
+    width = IntegerField(default=0)
 
     class Meta:
         # every tag must appears only once on one form

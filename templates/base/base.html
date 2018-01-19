@@ -9,7 +9,7 @@
 
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
-
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/bootstrap-submenu.css" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <html lang="pt-bt">
 <head>
@@ -18,7 +18,18 @@
 	{% block extrastatic %}
 	{% endblock %}
 
-	<title>{% block title %}Inventsis{% endblock %}</title>
+  <title>{% block title %}Inventsis{% endblock %}</title>
+  <style>
+      ul {
+          display: block;
+          list-style-type: disc;
+          margin-top: 1 em;
+          margin-bottom: 1 em;
+          margin-left: 0;
+          margin-right: 0;
+          padding-left: 20px;
+      }
+      </style>
 </head>
 <body>
  <!-- Fixed navbar -->
@@ -33,68 +44,106 @@
           </button>
           <a class="navbar-brand" href="{% url 'iform:iform_list' %}">Enterprise Data Repository</a>
         </div>
-
+        
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-                <li class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
-                  aria-expanded="true">Tags <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li class="dropdown">
-                      <li><a href="{% url 'tag:tag_create' %}"><strong>Create new Tag</strong></a></li>
-                      <li role="separator" class="divider"></li>
-                      {% for tag in tags %}
-                        <li><a href="{% url 'tag:tag_update' tag.id %}">{{ tag.name }}</a></li>
-                      {% endfor %}
-                      </li>
-                  </ul>
-                </li>
-              
-                <li class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
-                  aria-expanded="true">Forms <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li class="dropdown">
-                      <li><a href="{% url 'iform:iform_create' %}"><strong>Create new Form</strong></a></li>
-                      <li role="separator" class="divider"></li>
-                      {% for iform in iforms %}
-                        <li><a href="{% url 'iform:iform_update' iform.id %}">{{ iform.name }}</a></li>
-                      {% endfor %}
-                      </li>
-                  </ul>
-                </li>
 
-                <li class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
-                  aria-expanded="true">New Inspection <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li class="dropdown">
-                      {% for iform in iforms %}
-                        <li><a href="{% url 'inspection:inspection_create' iform.id %}">{{ iform.name }}</a></li>
-                      {% endfor %}
-                      </li>
-                  </ul>
-                </li>
-
-            <li><a href="{% url 'inspection:inspection_list' %}">Data Collections</a></li>
-<!-- 
+            <!-- Tag Menu -->
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
-              aria-expanded="false">Create <span class="caret"></span></a>
+              aria-expanded="true">Tags<span class="caret"></span></a>
+              
               <ul class="dropdown-menu">
-                  <li><a href="{% url 'tag:tag_create' %}">Tags</a></li>
-                  <li><a href="{% url 'iform:iform_create' %}">Forms</a></li>
-                  <li role="separator" class="divider"></li> -->
-                  <!--<li class="dropdown-header">Nav header</li>-->
-                  <!--<li><a href="#">Separated link</a></li>-->
-                  <!--<li><a href="#">One more separated link</a></li>-->
-              <!-- </ul>
-              </li>  -->
+                <li class="dropdown"> 
+                  <a href="{% url 'tag:tag_list' %}">List</a>
+                  <a href="{% url 'tag:tag_create' %}">Create</a>
+                  <li role="separator" class="divider"></li>
+                  
+                  {% load mptt_tags %}
+                      {% recursetree tags %}
+                      {% if not node.is_leaf_node %}
+                        <li class="dropdown-submenu">
+                        {% else %}
+                        <li class="dropdown">
+                      {% endif %}
+                          <a href="{% url 'tag:tag_update' node.id %}">{{ node.name }}</a>
+                              {% if not node.is_leaf_node %}
+                                  <ul class="dropdown-menu">
+                                      <li>
+                                        <a href="{% url 'tag:tag_update' node.id %}" class="dropdown-item" tabindex="-1">{{ children }}</a>
+                                      </li>
+                                  </ul>
+                              {% endif %}
+                      </li>
+                      {% endrecursetree %}
+                </li>
+              </ul>
+            </li>
+              
+            <!-- Form Menu -->
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+              aria-expanded="true">Forms <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li class="dropdown">
+                  <a href="{% url 'iform:iform_list' %}">List</a>
+                  <a href="{% url 'iform:iform_create' %}" class="dropdown-item">Create</a>
+                  <li role="separator" class="divider"></li>
+
+                  {% load mptt_tags %}
+                      {% recursetree iforms %}
+                      {% if not node.is_leaf_node %}
+                        <li class="dropdown-submenu">
+                        {% else %}
+                        <li class="dropdown">
+                      {% endif %}
+                          <a href="{% url 'iform:iform_update' node.id %}">{{ node.name }}</a>
+                              {% if not node.is_leaf_node %}
+                                  <ul class="dropdown-menu">
+                                      <li>
+                                        <a href="{% url 'iform:iform_update' node.id %}" class="dropdown-item" tabindex="-1">{{ children }}</a>
+                                      </li>
+                                  </ul>
+                              {% endif %}
+                      </li>
+                      {% endrecursetree %}
+                </li>
+              </ul>
+            </li>
+
+             <!-- Inspection Menu-->
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+              aria-expanded="true">New Inspection <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li class="dropdown">
+                  <li role="separator" class="divider"></li>
+                  {% load mptt_tags %}
+                  {% recursetree iforms %}
+                  {% if not node.is_leaf_node %}
+                    <li class="dropdown-submenu">
+                    {% else %}
+                    <li class="dropdown">
+                  {% endif %}
+                      <a href="{% url 'inspection:inspection_create' node.id %}">{{ node.name }}</a>
+                          {% if not node.is_leaf_node %}
+                              <ul class="dropdown-menu">
+                                  <li>
+                                    <a href="{% url 'inspection:inspection_create' node.id %}" class="dropdown-item" tabindex="-1">{{ children }}</a>
+                                  </li>
+                              </ul>
+                          {% endif %}
+                  </li>
+                  {% endrecursetree %}
+                </li>
+              </ul>
+            </li>
+
+            <li><a href="{% url 'inspection:inspection_list' %}">Data Collections</a></li>
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
               aria-expanded="false">Status<span class="caret"></span></a>
               <ul class="dropdown-menu">
-
 
                   {% if user.is_authenticated %}
                     <li class="navbar-text">Logged as

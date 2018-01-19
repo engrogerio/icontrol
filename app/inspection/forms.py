@@ -24,9 +24,11 @@ class InspectionForm(forms.Form):
             attrs = {
                 'style': 'width:'+str(iform_tag.width )
             }
+        # put an asterisc before the tag label when it's a required field
+        tag_label = str(tag) if not iform_tag.required else '* '+str(tag)
 
         widget_parameters = {
-            'label': str(tag),
+            'label': tag_label,
             'required': iform_tag.required,
             'max_length': tag.max_length,
             'initial': iform_tag.default_value,
@@ -133,7 +135,8 @@ class InspectionForm(forms.Form):
         iform_id = kwargs.pop('iform_id', None)
         iform = IForm.objects.get(id=iform_id)
         tag_list = IForm.objects.get(pk=iform_id).iform_tag.all().values('tag')
-        tags = Tag.objects.filter(pk__in=tag_list).filter(iform_tag_tag__iform=iform).order_by('iform_tag_tag__order')
+        tags = Tag.objects.filter(pk__in=tag_list).filter(
+            iform_tag_tag__iform=iform).order_by('iform_tag_tag__order')
         super(InspectionForm, self).__init__(*args, **kwargs)
         #Loop for assembling the form
         for i, tag in enumerate(tags):
