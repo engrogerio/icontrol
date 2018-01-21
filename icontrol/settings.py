@@ -30,7 +30,7 @@ SERVER_URL = '/icontrol'
 SECRET_KEY = '3d06v9+*aixwl*vs(42ifdk6@r+@+*r627_o2!#f)jysvr^n&o'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'app.value',
     'app.inspection',
     'app.iform',
+    'app.registration',
     'mptt',
 ]
 
@@ -70,9 +71,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-                'templates', 
-                'templates/base', 
-                'templates/registration', 
+            os.path.join(BASE_DIR, 'templates'),
                 ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -138,12 +137,12 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = os.path.join(BASE_DIR,'/static/')
-STATIC_ROOT = os.path.join(BASE_DIR,'')
+STATIC_URL = '/static/' # os.path.join(BASE_DIR,'/static/')
+STATIC_ROOT = os.path.join(BASE_DIR,'static/') # your files will be copied to here
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
-
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static'), # your non-app specific
+# static files will appear in a directory that is listed here
 )
 
 # Redirect to home URL after login (Default redirects to accounts/profile/)
