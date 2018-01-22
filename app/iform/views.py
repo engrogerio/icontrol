@@ -45,7 +45,9 @@ def iform_create (request):
 
         if iform_form.is_valid() and iform_tag_formset.is_valid():
             # creates blank iform
-            iform = iform_form.save()
+            iform = iform_form.save(commit=False)
+            iform.created_by = request.user
+            iform.save()
 
             for forms in iform_tag_formset.forms:
                 iform_tag = forms.save(commit=False)
@@ -85,9 +87,10 @@ def iform_update(request, pk=None):
         iform_tag_formset = IFormTagFormSet(request.POST, instance = iform)
 
         if iform_form.is_valid() and iform_tag_formset.is_valid():
-            # saves iform form
-            iform = iform_form.save()
-
+            # saves iform form with the user
+            iform = iform_form.save(commit=False)
+            iform.updated_by = request.user
+            iform.save()
             # first, exclude all tags from the tags queryset
             IFormTag.objects.filter(iform=iform).delete()
 

@@ -113,16 +113,19 @@ def inspection_update (request, pk=None):
         form = InspectionForm(request.POST, iform_id=iform.id)
         if form.is_valid():
             for field in form:
-                # TODO: section type tag, is not being persisted on the database
+                # TODO: section type tag should not being persisted on the database
                 
                 tag = Tag.objects.get(id=field.name)
                 # try to recover data from Value instance, but if can't, that is due to the tag was created
                 # after this inspection had been created. So, its created a new Value instance.
                 try:
                     value = Value.objects.filter(inspection=inspection).get(tag=tag)
+                    value.updated_by = request.user
                 except:
                     value = Value()
-
+                value.updated_by = request.user
+                inspection.updated_by = request.user
+                inspection.save()
                 data = field.value()
                 add_data(tag, value, data, inspection)
 
@@ -167,6 +170,7 @@ def inspection_create (request, pk=None):
                 value = Value()
                 data = field.value()
                 tag = Tag.objects.get(id=field.name)
+                value.created_by = request.user
                 value.number = tag
                 value.inspection = inspection
 

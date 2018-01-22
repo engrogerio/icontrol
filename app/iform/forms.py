@@ -46,7 +46,7 @@ class IFormForm(forms.ModelForm):
 
 class IFormTagForm(forms.ModelForm):
 
-    tag = forms.ModelChoiceField(queryset=Tag.objects.order_by('name'))
+    # tag = forms.ModelChoiceField(queryset=Tag.objects) #.order_by('name'))
 
     class Meta:
         model = IFormTag

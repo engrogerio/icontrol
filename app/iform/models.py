@@ -17,7 +17,11 @@ class IForm(MPTTModel, ControlModel):
 
     id = UUIDField(primary_key=True, default=uuid.uuid4,)
     name = CharField(max_length=255, default='New Form')
-    parent = parent = TreeForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
+    parent = parent = TreeForeignKey('self', blank=True, null=True, related_name='get_related_name', db_index=True)
+
+    @staticmethod
+    def get_related_name():
+        return 'iform'
 
     def __unicode__(self):
         return self.name

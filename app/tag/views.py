@@ -27,7 +27,6 @@ class TagList(LoginRequiredMixin, ListView):
         RequestConfig(self.request, paginate={'per_page': 30}).configure(table)
         context['table'] = table
         context['iform'] = 'iForm'
-        print('tag****', dir(self))
         return context
 
     # RequestConfig(request).configure(table)
@@ -42,15 +41,10 @@ class TagCreate(LoginRequiredMixin, CreateView ):
     form_class = TagForm
     success_url = reverse_lazy('tag:tag_list')
 
-    # def get_context_data(self, **kwargs):
-    # # To get current user
-    #     c = super(TagCreate, self).get_context_data(**kwargs)
-    #     self user = self.request.user
-    #     return c
-
     def form_valid(self, form):
         instance = form.save(commit=False)
         instance.user = self.request.user
+        instance.created_by = instance.user
         instance.save()
         return super(TagCreate, self).form_valid(form)
 
@@ -60,6 +54,13 @@ class TagUpdate(LoginRequiredMixin, UpdateView):
     template_name = 'tag/tag_form.html'
     form_class = TagForm
     success_url = reverse_lazy('tag:tag_list')
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.user = self.request.user
+        instance.updated_by = instance.user
+        instance.save()
+        return super(TagUpdate, self).form_valid(form)
 
 
 class TagDelete(LoginRequiredMixin, DeleteView):

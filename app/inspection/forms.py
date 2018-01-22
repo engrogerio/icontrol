@@ -6,7 +6,7 @@ from app.iform.models import IForm, IFormTag
 from app.tag.models import Tag
 from app.value.models import Value
 import datetime
-from djmoney.models.fields import MoneyField
+
 
 # TODO: shoud I use validators? https://docs.djangoproject.com/en/1.11/ref/validators/
 # TODO: should I use widgets instead of form.Fields?
