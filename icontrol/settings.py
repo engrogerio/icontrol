@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'app.iform',
     'app.registration',
     'mptt',
+    'treenav',
 ]
 
 MIDDLEWARE = [
@@ -78,6 +79,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'treenav.context_processors.treenav_active',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'app.tag.context_processors.add_variable_to_context',
@@ -137,11 +139,11 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/' # os.path.join(BASE_DIR,'/static/')
-STATIC_ROOT = os.path.join(BASE_DIR,'static/') # your files will be copied to here
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR,'icontrol/static') # your files will be copied to here
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'icontrol/static'), # your non-app specific
+    os.path.join(BASE_DIR, 'static/'), # your non-app specific
 # static files will appear in a directory that is listed here
 )
 

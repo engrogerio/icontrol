@@ -82,7 +82,37 @@ class Tag( MPTTModel, ControlModel):
 			slugs.append('/'.join(ancestors[:i+1]))
 		return slugs
 
+    def as_tree(self):
+        children = list(self.children.all())
+        branch = bool(children)
+        yield branch, self
+        for child in children:
+            for next in child.as_tree():
+                print('next=',next, ' - child=',child)
+                yield next
+        print(branch, '- ', children)
+        yield branch, None
+    
+    def get_tag_nav(self, request,tags=None):
+        """Recursively build a list of tags. The resulting list is meant to be iterated over in a view"""
+        if tags==None:
+            #get the root categories
+            tags = Tag.objects.filter(parent=None)
+            tags[0].active=True
+        else:
+            yield 'in'
 
+        for tag in tags:
+            yield tag
+            subcats = Tag.objects.select_related().filter(parent=tag)
+            if len(subcats):
+                tag.leaf=False
+                for x in self.get_tag_nav(request,subcats):
+                    yield x
+            else:
+                tag.leaf=True
+        yield 'out'
+        
 class TagTable(tables.Table):
 
     name = tables.LinkColumn('tag:tag_update', args=[A('pk')]) # link for editing

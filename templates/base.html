@@ -1,27 +1,97 @@
 {% load static %}
-
 {# Load the tag library #}
 {% load bootstrap3 %}
-<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+
+<link rel="stylesheet" href="{% static "css/fontawesome.min.css" %}"/>
+<link type="text/css" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<link type="text/css" rel="stylesheet" href="//jonmiles.github.io/bootstrap-treeview/css/bootstrap-treeview.css">
+<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap-submenu.css" %}"/>
 {# Load CSS and JavaScript #}
-{% bootstrap_css %}
+<!-- {% bootstrap_css %} -->
 {% bootstrap_javascript %}
 {% load mptt_tags %}
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
-<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap-submenu.css" %}"/>
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <html lang="pt-bt">
 <head>
-	<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-	{% block extrastatic %}
-	{% endblock %}
+	<!-- {% block extrastatic %}
+	{% endblock %} -->
 
-  <title>{% block title %}Inventsis{% endblock %}</title>
+    <title>{% block title %}Inventsis{% endblock %}</title>
 
+   
 </head>
 <body>
+                        
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://jonmiles.github.io/bootstrap-treeview/js/bootstrap-treeview.js"></script>
+        <script src="{% static "js/treetogle.js" %}"></script>
+
+        <script src="{% static "js/fontawesome-all.js" %}"></script>
+
+        <script type="text/javascript">
+            $(function(){
+                var mytree = [
+                {
+                  text: "Menu",
+                    state: {
+                        checked: true,
+                        disabled: false,
+                        expanded: false
+                      },
+                  nodes: [
+                    {
+                      text: "Tags", href:"/link",
+                      icon: "glyphicon glyphicon-stop",
+                      selectedIcon: "glyphicon glyphicon-stop",
+                    
+                      nodes: [
+                        {
+                          text: "Grandchild 1",
+                          icon: "glyphicon glyphicon-stop",
+                      selectedIcon: "glyphicon glyphicon-stop",
+                        },
+                        {
+                          text: "Grandchild 2",
+                          icon: "glyphicon glyphicon-stop",
+                      selectedIcon: "glyphicon glyphicon-stop",
+                        }
+                      ]
+                    },
+                    {
+                      text: "Child 2"
+                    },
+              
+                {
+                  text: "Parent 2"
+                },
+                {
+                  text: "Parent 3"
+                },
+                {
+                  text: "Parent 4"
+                },
+                {
+                  text: "Parent 5"
+                }
+              ]
+                }];
+        
+                $('#tree').treeview({data: mytree, enableLinks:true
+                });
+                // $('#tree').on('nodeSelected',function(event, data){
+                //     event.stopPropagation();
+                //     alert("Im here !!!")
+                // });
+            });
+        </script>
+    
  <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-static-top">
       <div class="container">
@@ -34,133 +104,35 @@
           </button>
           <a class="navbar-brand" href="{% url 'iform:iform_list' %}">Enterprise Data Repository</a>
         </div>
-        
         <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-
+        <ul class="nav navbar-nav">
             <!-- Tag Menu -->
+
             <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
-              aria-expanded="true">Tags<span class="caret"></span></a>
-              
-              <ul class="dropdown-menu">
-                <li class="dropdown"> 
-                  <a href="{% url 'tag:tag_list' %}">List</a>
-                  <a href="{% url 'tag:tag_create' %}">Create</a>
-                  <li role="separator" class="divider"></li>
+                <button type="button" class="dropdown-toggle" data-toggle="collapse" data-target="#tree">Menu</button>
+                <ul class="dropdown-menu">
                     
-                  {% recursetree tags %}
-                  {% if not node.is_leaf_node %}
-                    <li class="dropdown-submenu">
-                    {% else %}
-                    <li class="dropdown">
-                  {% endif %}
-                      <a href="{% url 'tag:tag_update' node.id %}">{{ node.name }}</a>
-                          {% if not node.is_leaf_node %}
-                              <ul class="dropdown-menu">
-                                  <li>
-                                    <a href="{% url 'tag:tag_update' node.id %}" class="dropdown-item" tabindex="-1">{{ children }}</a>
-                                  </li>
-                              </ul>
-                          {% endif %}
-                  </li>
-                  {% endrecursetree %}
-            
-                    
+                    <ul class="container" style="width: 300px;">
                         
-                </li>
-              </ul>
-            </li>
-                        
-            <!-- Tag Menu Standard css -->
-            <!-- <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
-              aria-expanded="true">Tags<span class="caret"></span></a>
-              
-              <ul class="dropdown-menu">
-                <li class="dropdown"> 
-                  <a href="{% url 'tag:tag_list' %}">List</a>
-                  <a href="{% url 'tag:tag_create' %}">Create</a>
-                  <li role="separator" class="divider"></li>
-                    
-                  {% recursetree tags %} -->
-                  <!-- Add the arrow icon for submenus -->
-                      <!-- {% if not node.is_leaf_node %}
-                        <ul class="dropdown-submenu">
-                      {% else %}
-                        <ul class="dropdown">
-                      {% endif %}
-                        <a href="{% url 'tag:tag_update' node.id %}">{{ node }}</a>
-                        {% if not node.is_leaf_node %}
-                            <ul class="dropdown-menu">
-                                <a href="{% url 'tag:tag_update' node.id %}">{{ children }}</a>
-                            </ul>
-                        {% endif %}
-                        </ul>
-                  {% endrecursetree %}
+                       
+                          <div id="tree"></div>
+                       
+                   </ul>     
+                    </ul>
+                   
+            </li> 
 
-                    
-                        
-                </li>
-              </ul>
-            </li> -->
-
-
-            <!-- Form Menu -->
             <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
-              aria-expanded="true">Forms <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li class="dropdown">
-                  <a href="{% url 'iform:iform_list' %}">List</a>
-                  <a href="{% url 'iform:iform_create' %}" class="dropdown-item">Create</a>
+                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+                aria-expanded="true">Tags<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="{% url 'tag:tag_list' %}">List</a></li>
+                  <li><a href="{% url 'tag:tag_create' %}">Create</a></li> 
                   <li role="separator" class="divider"></li>
-                      {% recursetree iforms %}
-                      {% if not node.is_leaf_node %}
-                        <li class="dropdown-submenu">
-                        {% else %}
-                        <li class="dropdown">
-                      {% endif %}
-                          <a href="{% url 'iform:iform_update' node.id %}">{{ node.name }}</a>
-                              {% if not node.is_leaf_node %}
-                                  <ul class="dropdown-menu">
-                                      <li>
-                                        <a href="{% url 'iform:iform_update' node.id %}" class="dropdown-item" tabindex="-1">{{ children }}</a>
-                                      </li>
-                                  </ul>
-                              {% endif %}
-                      </li>
-                      {% endrecursetree %}
-                </li>
-              </ul>
-            </li>
-
-             <!-- Inspection Menu-->
-            <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
-              aria-expanded="true">New Inspection <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li class="dropdown">
-                  <li role="separator" class="divider"></li>
-                  {% recursetree iforms %}
-                  {% if not node.is_leaf_node %}
-                    <li class="dropdown-submenu">
-                    {% else %}
-                    <li class="dropdown">
-                  {% endif %}
-                      <a href="{% url 'inspection:inspection_create' node.id %}">{{ node.name }}</a>
-                          {% if not node.is_leaf_node %}
-                              <ul class="dropdown-menu">
-                                  <li>
-                                    <a href="{% url 'inspection:inspection_create' node.id %}" class="dropdown-item" tabindex="-1">{{ children }}</a>
-                                  </li>
-                              </ul>
-                          {% endif %}
-                  </li>
-                  {% endrecursetree %}
-                </li>
-              </ul>
-            </li>
+                   
+                </ul>
+              </li>
+          
 
             <li><a href="{% url 'inspection:inspection_list' %}">Data Collections</a></li>
             <li class="dropdown">
@@ -174,7 +146,7 @@
                     </li>
                   {% endif %}
 
-                  <li role="separator" class="divider"></li>
+                  <!-- <li role="separator" class="divider"></li> -->
                     
                   {% if user.is_authenticated %}                    
                     <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>   

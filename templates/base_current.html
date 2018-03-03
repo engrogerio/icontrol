@@ -1,0 +1,335 @@
+
+{% load static %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{% load treenav_tags %}
+
+<link rel="stylesheet" href="{% static "css/fontawesome.min.css" %}"/>
+<link class="cssdeck" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+
+{# Load CSS and JavaScript #}
+<!-- {% bootstrap_css %} -->
+{% bootstrap_javascript %}
+{% load mptt_tags %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap-submenu.css" %}"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="pt-bt">
+<head>
+    <meta charset="UTF-8">
+
+	<!-- {% block extrastatic %}
+	{% endblock %} -->
+
+    <title>{% block title %}Inventsis{% endblock %}</title>
+
+</head>
+<body>
+
+    
+ <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'iform:iform_list' %}">Enterprise Data Repository</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <!-- Tag Menu -->
+            <li class="dropdown">
+              <!-- <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+              aria-expanded="true">Tags<span class="caret"></span></a> -->
+              <!-- <div class="container" style="width:400px; padding: 8px 0;"> -->
+                  <!-- <div style="overflow-y: hidden; overflow-x: hidden; "> -->
+                      <ul class="nav nav-list">
+                          <li><label class="tree-toggler nav-header"><i class="fa fa-book fa-fw"></i>Menu</label>
+                              <ul class="nav nav-list tree">
+                                  <!-- <li><a href="{% url 'tag:tag_list' %}"><i class="fa fa-book fa-fw"></i>Link</a></li>
+                                  <li><a href="#"><i class="fa fa-book fa-fw"></i>Link</a></li> -->
+                                  <label class="tree-toggler nav-header" role="button">
+                                    <i class="fa fa-book fa-fw"></i>Create</label>
+                                      <ul class="nav nav-list tree">
+                                          <li><a href="#"><i class="fa fa-tag fa-fw"></i>Tag</a></li>
+                                          <li><a href="#"><i class="fa fa-list-ul fa-fw"></i>Form</a></li>
+                                          <li><label class="tree-toggler nav-header">
+                                              <i class="fa fa-book fa-fw"></i>Header 1.1.1</label>
+                                              <ul class="nav nav-list tree">
+                                                  <li><a href="#"><i class="fa fa-book fa-fw"></i>Link</a></li>
+                                                  <li><a hrCould not parse the remainder: '(obj.data)' from 'pretty(obj.data)'ef="#"><i class="fa fa-book fa-fw"></i>Link</a></li>
+                                              </ul>
+                                          </li>
+                                      </ul>
+                                  
+                                  <li><label class="tree-toggler nav-header" role="button">
+                                      <i class="fa fa-search fa-fw"></i>Inspect</label>
+                                    <ul class="nav nav-list tree">
+                                        <li><a href="#"><i class="fa fa-book fa-fw"></i>Link</a></li>
+                                        <li><a href="#"><i class="fa fa-book fa-fw"></i>Link</a></li>
+                                        <li><label class="tree-toggler nav-header">
+                                            <i class="fa fa-book fa-fw"></i>Header 1.1.1</label>
+                                            <ul class="nav nav-list tree">
+                                                <li><a href="#"><i class="fa fa-book fa-fw"></i>Link</a></li>
+                                                <li><a href="#"><i class="fa fa-book fa-fw"></i>Link</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><label class="tree-toggler nav-header" role="button">
+                                    <i class="fa fa-book fa-fw"></i>Json Editor</label>
+                                    <ul class="nav nav-list tree">
+                                        <div ng-app="ngApp" ng-controller="ngCtrl" class="wrapper">
+                                            <div class="col">
+                                                <angular-jsoneditor ng-model="obj.data" options="obj.options" style="width: 100px; height: 200px;"></angular-jsoneditor>
+                                            </div>
+                                        
+                                            <div class="col">
+                                                <div class="pdL4">
+                                                    <button type="button" class="btn btn-primary" ng-click="changeData()"><i class="fa fa-check-circle"></i>
+                                                        change data
+                                                    </button>
+                                                    <button type="button" class="btn btn-primary" ng-click="changeOptions()"><i class="fa fa-check-circle"></i>
+                                                        change options
+                                                    </button>
+                                                    
+                                                    <input type="text" ng-model="obj.data.String">
+                                                </div>
+                                            </div>
+                                        </div>                                         
+                                        
+                                    </ul>
+                                </li>
+                               
+                                    <li><label class="tree-toggler nav-header" role="button">
+                                        <i class="fa fa-book fa-fw"></i>Edit</label>
+                                 
+                                                <div id="tree"></div>
+                                            
+                                    </li>
+                               
+                                <li><label class="tree-toggler nav-header" role="button">
+                                    <i class="fa fa-book fa-fw"></i>Edit</label>
+                                    <ul class="nav nav-list tree">
+                                        <li><label class="tree-toggler nav-header" role="button">
+                                        <i class="fa fa-tags fa-fw"></i>Tags</label>
+                                        <ul class="nav nav-list tree">
+                                                
+                                                    {% recursetree tags %}
+                                                    <li>
+                                                        <label class="tree-toggler nav-header" role="button">
+                                                        <!-- se é não é leaf, mostrar icone de pasta, se não icone de tag -->    
+                                                        {% if not node.is_leaf_node %}
+                                                            <i class="fa fa-folder-open fa-fw"></i>
+                                                        {% else %}
+                                                            <i class="fa fa-tag fa-fw"></i>
+                                                        {% endif %}
+                                                        {{ node.name }}n</label>
+                                                        {% if not node.is_leaf_node %}
+                                                        <ul class="nav nav-list tree">
+                                                            <a href="{% url 'tag:tag_update' node.id %}">{{ children }}</a>
+                                                        </ul>
+                                                        {% endif %}
+                                                    </li>
+                                                    {% endrecursetree %}
+                                            </li>
+                                        </ul>
+                                    </ul>
+                                </li>
+                                <li><label class="tree-toggler nav-header" role="button">
+                                <i class="fa fa-book fa-fw"></i>Edit</label>
+                                  <ul class="nav nav-list tree">
+                                      <li><a href="#"><i class="fa fa-tags fa-fw"></i>Tags</a></li> 
+                                      <li><a href="#"><i class="fa fa-book fa-fw"></i>Forms</a></li>
+                                      <li><label class="tree-toggler nav-header">
+                                          <i class="fa fa-tags fa-fw"></i>Tags</label>
+                                          <ul class="nav nav-list tree">
+                                              <li><a href="#"><i class="fa fa-book fa-fw"></i>Link</a></li>
+                                              <li><a href="#"><i class="fa fa-book fa-fw"></i>Link</a></li>
+                                          </ul>
+                                      </li>
+                                  </ul>
+                                </li>
+                              <!-- Branch -->
+                              <li><label class="tree-toggler nav-header" role="button">
+                                <i class="fa fa-wrench fa-fw"></i>Configure</label>
+                                <!-- leaf -->
+                                  <ul class="nav nav-list tree">
+                                      <li><a href="#"><i class="fa fa-book fa-fw"></i>Link</a></li>
+                                      <li><a href="#"><i class="fa fa-book fa-fw"></i>Link</a></li>
+                                      <li><label class="tree-toggler nav-header">
+                                          <i class="fa fa-book fa-fw"></i>Header 1.1.1</label>
+                                          <ul class="nav nav-list tree">
+                                              <li><a href="#"><i class="fa fa-book fa-fw"></i>Link</a></li>
+                                              <li><a href="#"><i class="fa fa-book fa-fw"></i>Link</a></li>
+                                          </ul>
+                                      </li>
+                                  </ul>
+                              </li>
+                              </ul>
+                          </li>
+                          <li class="divider"></li>
+                      </ul>
+                  <!-- </div> -->
+              <!-- </div> -->
+              <script class="cssdeck" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+              <script class="cssdeck" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+              <script class="" src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+              <script class="" src="//unpkg.com/angular-jsoneditor@0.0.1/dist/angular-jsoneditor.js"></script>
+
+              <!-- Those 2 below are the tree dependances -->
+              <!-- <script src="https://cdn.rawgit.com/atatanasov/gijgo/master/dist/combined/js/gijgo.min.js" type="text/javascript"></script>
+              <link href="https://cdn.rawgit.com/atatanasov/gijgo/master/dist/combined/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+               --> 
+              
+              <script src="{% static "js/treetogle.js" %}"></script>
+              <script src="{% static "js/bootstrap-treeview.js" %}"></script>
+              <script src="{% static "js/fontawesome-all.js" %}"></script>
+            </li>
+                      
+            <!-- Tag Menu mobile css -->
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+              aria-expanded="true">Tags for mobile<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li class="dropdown"> 
+                  <a href="{% url 'tag:tag_list' %}">List</a>
+                </li>
+                <li>
+                  <a href="{% url 'tag:tag_create' %}">Create</a>
+                </li>  
+                  <li role="separator" class="divider"></li>
+                    
+                  {% recursetree tags %}
+                  <!-- Add the arrow icon for submenus -->
+                      {% if not node.is_leaf_node %}
+                        <ul class="dropdown-submenu">
+                      {% else %}
+                        <ul class="dropdown">
+                      {% endif %}
+                        <a href="{% url 'tag:tag_update' node.id %}">{{ node.name }}</a>
+                        {% if not node.is_leaf_node %}
+                            <ul class="dropdown-menu">
+                                <a href="{% url 'tag:tag_update' node.id %}">{{ children }}</a>
+                            </ul>
+                        {% endif %}
+                        </ul>
+                  {% endrecursetree %}
+
+                    
+                        
+                </li>
+              </ul>
+            </li>
+
+
+            <!-- Form Menu -->
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+              aria-expanded="true">Forms <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li class="dropdown">
+                  <a href="{% url 'iform:iform_list' %}">List</a>
+                  <a href="{% url 'iform:iform_create' %}" class="dropdown-item">Create</a>
+                  <li role="separator" class="divider"></li>
+                      {% recursetree iforms %}
+                      {% if not node.is_leaf_node %}
+                        <li class="dropdown-submenu">
+                        {% else %}
+                        <li class="dropdown">
+                      {% endif %}
+                          <a href="{% url 'iform:iform_update' node.id %}">{{ node.name }}</a>
+                              {% if not node.is_leaf_node %}
+                                  <ul class="dropdown-menu">
+                                      <li>
+                                        <a href="{% url 'iform:iform_update' node.id %}" class="dropdown-item" tabindex="-1">{{ children }}</a>
+                                      </li>
+                                  </ul>
+                              {% endif %}
+                      </li>
+                      {% endrecursetree %}
+                </li>
+              </ul>
+            </li>
+
+             <!-- Inspection Menu-->
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+              aria-expanded="true">New Inspection <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li class="dropdown">
+                  <li role="separator" class="divider"></li>
+                  {% recursetree iforms %}
+                  {% if not node.is_leaf_node %}
+                    <li class="dropdown-submenu">
+                    {% else %}
+                    <li class="dropdown">
+                  {% endif %}
+                      <a href="{% url 'inspection:inspection_create' node.id %}">{{ node.name }}</a>
+                          {% if not node.is_leaf_node %}
+                              <ul class="dropdown-menu">
+                                  <li>
+                                    <a href="{% url 'inspection:inspection_create' node.id %}" class="dropdown-item" tabindex="-1">{{ children }}</a>
+                                  </li>
+                              </ul>
+                          {% endif %}
+                  </li>
+                  {% endrecursetree %}
+                </li>
+              </ul>
+            </li>
+
+            <li><a href="{% url 'inspection:inspection_list' %}">Data Collections</a></li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+              aria-expanded="false">Status<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+
+                  {% if user.is_authenticated %}
+                    <li class="navbar-text">Logged as
+                        {{ user.get_username }}
+                    </li>
+                  {% endif %}
+
+                  <!-- <li role="separator" class="divider"></li> -->
+                    
+                  {% if user.is_authenticated %}                    
+                    <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>   
+                  {% else %}
+                    <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>   
+                  {% endif %} 
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Settings</a></li>
+              </ul>
+            </li>
+                  <li><a href="{% url 'iform:iform_list' %}">Home</a></li>
+                  <li><a href="mailto:rogerio@inventsis.com.br">Contact</a></li>
+                 
+              </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+        <div class="container">
+	{% block content %}
+	<h4> Invent sistemas </h4>
+	{% endblock %}
+
+
+	{% block footer %}
+	{% endblock%}
+</div>
+
+	{% block extrajs %}
+	{% endblock %}
+
+
+</body>
+</html>

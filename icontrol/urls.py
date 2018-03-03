@@ -19,6 +19,9 @@ from django.views.generic.base import RedirectView
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 import settings
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
         url(r'^$', RedirectView.as_view(url='iform/list')),
@@ -27,7 +30,6 @@ urlpatterns = [
         url(r'^inspection/', include('app.inspection.urls', namespace='inspection')),
         url(r'^admin/', admin.site.urls),
         url(r'^accounts/', include('django.contrib.auth.urls')),
-#         url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
-# { 'document_root': settings.STATIC_URL }),
 
-]
+
+] #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

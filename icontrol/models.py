@@ -9,7 +9,7 @@ class ControlModel(models.Model):
 
     class Meta:
         abstract = True
-
+    # thanks to https://stackoverflow.com/questions/42899817
     @staticmethod
     def get_related_name():
         return '%(app_label)s_%(class)s'
