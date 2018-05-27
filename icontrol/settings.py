@@ -38,6 +38,9 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    
+    #'django_admin_bootstrapped.bootstrap3',
+    'django_admin_bootstrapped',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,8 +55,11 @@ INSTALLED_APPS = [
     'app.inspection',
     'app.iform',
     'app.registration',
-    'mptt',
+    'django_mptt_admin',
     'treenav',
+    'fontawesome',
+    'polymorphic_tree',
+    'polymorphic',
 ]
 
 MIDDLEWARE = [
@@ -73,6 +79,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates/icontrol'),
                 ],
         'APP_DIRS': True,
         'OPTIONS': {

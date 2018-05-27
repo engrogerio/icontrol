@@ -1,3 +1,7 @@
+https://riccardo.forina.me/bootstrap-your-django-admin-in-3-minutes/
+https://mbraak.github.io/django-mptt-admin/#options
+
+
 1 Fix bug with dates from abstract class all models inherit - ok
 
 1 Fix bug with created and updated user from abstract class all models inherit - OK
@@ -25,12 +29,10 @@ inspection_view(can_view_all, can_view_own, can_edit_all,
 
 10- Create a JSON interface as in https://spapas.github.io/2013/12/24/django-dynamic-forms/#id5 / https://github.com/abbasovalex/django-SplitJSONWidget-form
 
-11- tree based json
-<!--   var json =  {% for genre,structure in nodes|tree_info %}{% if structure.new_level %} [{ {% else %} },{ {% endif %}
-    id: "{{ genre.id }}",
-    children: {% if genre.is_leaf_node %}[]{% endif %}
-    {% for level in structure.closed_levels %}}]{% endfor %}{% endfor %} -->
-
 12- The final idea is to have this as form designer http://jeremydorn.com/json-editor/ and then, save data back
 to the database using icontrol
 13- Use this Dashboard https://github.com/almasaeed2010/AdminLTE
+
+14- JSON Menu done
+15- A new customer must automatically create a ws with url with customer CNPJ like:
+ https://xxxx/icontrol/api/v1.0/12334341239999/form/list

@@ -3,13 +3,14 @@
 {% load bootstrap3 %}
 
 <link rel="stylesheet" href="{% static "css/fontawesome.min.css" %}"/>
-<link type="text/css" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-<link type="text/css" rel="stylesheet" href="//jonmiles.github.io/bootstrap-treeview/css/bootstrap-treeview.css">
+<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<link type="text/css" rel="stylesheet" href="https://jonmiles.github.io/bootstrap-treeview/css/bootstrap-treeview.css">
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.0.8/themes/default/style.min.css">
 <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap-submenu.css" %}"/>
 {# Load CSS and JavaScript #}
 <!-- {% bootstrap_css %} -->
-{% bootstrap_javascript %}
-{% load mptt_tags %}
+<!-- {% bootstrap_javascript %} -->
+
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
 
@@ -27,68 +28,72 @@
 </head>
 <body>
                         
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="https://jonmiles.github.io/bootstrap-treeview/js/bootstrap-treeview.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.0.8/jstree.min.js"></script>
         <script src="{% static "js/treetogle.js" %}"></script>
 
         <script src="{% static "js/fontawesome-all.js" %}"></script>
 
         <script type="text/javascript">
             $(function(){
-                var mytree = [
-                {
-                  text: "Menu",
-                    state: {
-                        checked: true,
-                        disabled: false,
-                        expanded: false
-                      },
-                  nodes: [
-                    {
-                      text: "Tags", href:"/link",
-                      icon: "glyphicon glyphicon-stop",
-                      selectedIcon: "glyphicon glyphicon-stop",
-                    
-                      nodes: [
-                        {
-                          text: "Grandchild 1",
-                          icon: "glyphicon glyphicon-stop",
-                      selectedIcon: "glyphicon glyphicon-stop",
-                        },
-                        {
-                          text: "Grandchild 2",
-                          icon: "glyphicon glyphicon-stop",
-                      selectedIcon: "glyphicon glyphicon-stop",
-                        }
-                      ]
-                    },
-                    {
-                      text: "Child 2"
-                    },
+              $(".search-input").keyup(function() {
+
+              var searchString = $(this).val();
+              console.log(searchString);
+              $('#jstree').jstree('search', searchString);
+              });
               
-                {
-                  text: "Parent 2"
-                },
-                {
-                  text: "Parent 3"
-                },
-                {
-                  text: "Parent 4"
-                },
-                {
-                  text: "Parent 5"
-                }
-              ]
-                }];
-        
-                $('#tree').treeview({data: mytree, enableLinks:true
-                });
-                // $('#tree').on('nodeSelected',function(event, data){
-                //     event.stopPropagation();
-                //     alert("Im here !!!")
-                // });
+              var jsonData = [
+              {"id":"27","parent":"#","text":"Listar Formulários", "a_attr": {"href": "/iform/list"},},
+              {"id":"28","parent":"27","text":"Executar trabalho em regime de turnos ininterruptos de revezamento"},
+              {"id":"30","parent":"28","text":"Executar trabalho em jornada de sobreaviso"},
+              {"id":"33","parent":"28","text":"Trabalhar em ferrovias"},
+              {"id":"35","parent":"33","text":"Utilizar sistemas alternativos eletrônicos de marcação do ponto"}
+            ];
+
+            $("#tree").jstree({
+              "plugins": ["search"],
+                 core:{
+                     "data": jsonData
+                 },
+                 "search": {  
+                  "case_insensitive": true,
+                  "show_only_matches" : true
+                  },
+             })
+             //this mades the tree clicable link works
+             //https://stackoverflow.com/questions/8378561/
+             .bind("select_node.jstree", function (e,data) { 
+               $('#jstree').jstree('save_state');
+             })
+             .on("activate_node.jstree", function(e,data){
+               document.location.href = data.node.a_attr.href; 
+               });
+
+              //this makes the dropdown stays opened until while we click outside
+              //https://stackoverflow.com/questions/19740121/
+             
+             $('#keepdown').on({
+              "shown.bs.dropdown": function() { this.closable = true; },
+              "click":             function(e) { 
+                  var target = $(e.target);
+                  if(target.hasClass("dropdown-toggle")) 
+                    this.closable = true;
+                  else 
+                    this.closable = false; 
+                    
+              },
+              "hide.bs.dropdown":  function() { return this.closable; }
+          });
+
+
+
+            // $('#keepdown').on('hide.bs.dropdown', function () {
+            //   return false;
+            //   });
             });
         </script>
     
@@ -108,20 +113,19 @@
         <ul class="nav navbar-nav">
             <!-- Tag Menu -->
 
-            <li class="dropdown">
-                <button type="button" class="dropdown-toggle" data-toggle="collapse" data-target="#tree">Menu</button>
-                <ul class="dropdown-menu">
-                    
-                    <ul class="container" style="width: 300px;">
-                        
-                       
-                          <div id="tree"></div>
-                       
-                   </ul>     
-                    </ul>
-                   
-            </li> 
-
+          
+            <li class="dropdown" id="keepdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+              aria-expanded="true">Menu<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                  <div>
+                      <input class="search-input form-control"></input>
+                  </div>
+                <div id="tree"></div>
+                <li role="separator" class="divider"></li>
+              </ul>
+            </li>
+          
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
                 aria-expanded="true">Tags<span class="caret"></span></a>
