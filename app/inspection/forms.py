@@ -24,8 +24,8 @@ class InspectionForm(forms.Form):
             attrs = {
                 'style': 'width:'+str(iform_tag.width )
             }
-        # put an asterisc before the tag label when it's a required field
-        tag_label = str(tag) if not iform_tag.required else '* '+str(tag)
+        # put an asterisc after the tag label when it's a required field
+        tag_label = str(tag) if not iform_tag.required else str(tag)+' *'
 
         widget_parameters = {
             'label': tag_label,
@@ -34,6 +34,7 @@ class InspectionForm(forms.Form):
             'initial': iform_tag.default_value,
             'help_text': tag.help_text,
             'disabled': iform_tag.read_only, 
+            #'placeholder': 'placeholder'
         }
         
         if tag.type == tag.TEXT:
@@ -48,6 +49,7 @@ class InspectionForm(forms.Form):
             **widget_parameters
             )
         elif tag.type == tag.INTEGER:
+            widget_parameters.pop('max_length')
             return forms.IntegerField(
             widget=forms.NumberInput(attrs=attrs),
             **widget_parameters

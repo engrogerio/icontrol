@@ -1,0 +1,189 @@
+{% load static %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+<link rel="stylesheet" href="{% static "css/fontawesome.min.css" %}"/>
+<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<link type="text/css" rel="stylesheet" href="https://jonmiles.github.io/bootstrap-treeview/css/bootstrap-treeview.css">
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.0.8/themes/default/style.min.css">
+<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap-submenu.css" %}"/>
+{# Load CSS and JavaScript #}
+<!-- {% bootstrap_css %} -->
+<!-- {% bootstrap_javascript %} -->
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="pt-bt">
+<head>
+    <meta charset="UTF-8">
+
+	<!-- {% block extrastatic %}
+	{% endblock %} -->
+
+    <title>{% block title %}Inventsis{% endblock %}</title>
+
+   
+</head>
+<body>
+                        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://jonmiles.github.io/bootstrap-treeview/js/bootstrap-treeview.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.0.8/jstree.min.js"></script>
+        <script src="{% static "js/treetogle.js" %}"></script>
+
+        <script src="{% static "js/fontawesome-all.js" %}"></script>
+
+        <script type="text/javascript">
+            $(function(){
+              $(".search-input").keyup(function() {
+
+              var searchString = $(this).val();
+              console.log(searchString);
+              $('#jstree').jstree('search', searchString);
+              });
+              
+              var jsonData = [
+              {"id":"27","parent":"#","text":"Listar Formulários", "a_attr": {"href": "/iform/list"},},
+              {"id":"28","parent":"27","text":"Executar trabalho em regime de turnos ininterruptos de revezamento"},
+              {"id":"30","parent":"28","text":"Executar trabalho em jornada de sobreaviso"},
+              {"id":"33","parent":"28","text":"Trabalhar em ferrovias"},
+              {"id":"35","parent":"33","text":"Utilizar sistemas alternativos eletrônicos de marcação do ponto"}
+            ];
+
+            $("#tree").jstree({
+              "plugins": ["search"],
+                 core:{
+                     "data": jsonData
+                 },
+                 "search": {  
+                  "case_insensitive": true,
+                  "show_only_matches" : true
+                  },
+             })
+             //this mades the tree clicable link works
+             //https://stackoverflow.com/questions/8378561/
+             .bind("select_node.jstree", function (e,data) { 
+               $('#jstree').jstree('save_state');
+             })
+             .on("activate_node.jstree", function(e,data){
+               document.location.href = data.node.a_attr.href; 
+               });
+
+              //this makes the dropdown stays opened until while we click outside
+              //https://stackoverflow.com/questions/19740121/
+             
+             $('#keepdown').on({
+              "shown.bs.dropdown": function() { this.closable = true; },
+              "click":             function(e) { 
+                  var target = $(e.target);
+                  if(target.hasClass("dropdown-toggle")) 
+                    this.closable = true;
+                  else 
+                    this.closable = false; 
+                    
+              },
+              "hide.bs.dropdown":  function() { return this.closable; }
+          });
+
+
+
+            // $('#keepdown').on('hide.bs.dropdown', function () {
+            //   return false;
+            //   });
+            });
+        </script>
+    
+ <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'iform:iform_list' %}">Enterprise Data Repository</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <!-- Tag Menu -->
+
+          
+            <li class="dropdown" id="keepdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+              aria-expanded="true">Menu<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                  <div>
+                      <input class="search-input form-control"></input>
+                  </div>
+                <div id="tree"></div>
+                <li role="separator" class="divider"></li>
+              </ul>
+            </li>
+          
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+                aria-expanded="true">Tags<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="{% url 'tag:tag_list' %}">List</a></li>
+                  <li><a href="{% url 'tag:tag_create' %}">Create</a></li> 
+                  <li role="separator" class="divider"></li>
+                   
+                </ul>
+              </li>
+          
+
+            <li><a href="{% url 'inspection:inspection_list' %}">Data Collections</a></li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+              aria-expanded="false">Status<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+
+                  {% if user.is_authenticated %}
+                    <li class="navbar-text">Logged as
+                        {{ user.get_username }}
+                    </li>
+                  {% endif %}
+
+                  <!-- <li role="separator" class="divider"></li> -->
+                    
+                  {% if user.is_authenticated %}                    
+                    <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>   
+                  {% else %}
+                    <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>   
+                  {% endif %} 
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Settings</a></li>
+              </ul>
+            </li>
+                  <li><a href="{% url 'iform:iform_list' %}">Home</a></li>
+                  <li><a href="mailto:rogerio@inventsis.com.br">Contact</a></li>
+                 
+              </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+        <div class="container">
+	{% block content %}
+	<h4> Invent sistemas </h4>
+	{% endblock %}
+
+
+	{% block footer %}
+	{% endblock%}
+</div>
+
+	{% block extrajs %}
+	{% endblock %}
+
+
+</body>
+</html>

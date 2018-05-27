@@ -17,11 +17,7 @@ class IForm(MPTTModel, ControlModel):
 
     id = UUIDField(primary_key=True, default=uuid.uuid4,)
     name = CharField(max_length=255, default='New Form')
-    parent = parent = TreeForeignKey('self', blank=True, null=True, related_name='get_related_name', db_index=True)
-
-    @staticmethod
-    def get_related_name():
-        return 'iform'
+    parent = parent = TreeForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
 
     def __unicode__(self):
         return self.name
@@ -31,6 +27,8 @@ class IFormTag(models.Model):
 
     class Meta:
         db_table='iform_tag'
+        # every tag must appears only once on one form
+        unique_together = ["iform", "tag"]
 
     iform = ForeignKey(IForm, related_name='iform_tag') 
     tag = ForeignKey('tag.Tag', related_name='iform_tag_tag')
@@ -39,7 +37,3 @@ class IFormTag(models.Model):
     required = BooleanField(default=False)
     default_value = CharField(max_length=1000, null=True, blank=True)
     width = IntegerField(default=0)
-
-    class Meta:
-        # every tag must appears only once on one form
-        unique_together = ["iform", "tag"]

@@ -2,7 +2,10 @@
 
 {# Load the tag library #}
 {% load bootstrap3 %}
+
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="{% static "js/treetogle.js" %}"></script>
+
 {# Load CSS and JavaScript #}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
@@ -38,59 +41,101 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
 
+
+            <!-- *************** TESTE Tag Menu ******************************-->
+
+               
+
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-hashpopup="true" 
+                    aria-expanded="false">TESTE <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                      {% recursetree tags %}
+                        <li><a href="{% url 'tag:tag_update' node.id %}">{{ node.name }}</a></li>
+                        {% if not node.is_leaf_node %}
+                        <ul> 
+                          <li class="dropdown-submenu">
+                            <a href="{% url 'tag:tag_update' node.id %}">{{ children }}</a>
+                          </li>
+                        </ul>
+                        {% endif %}
+                      {% endrecursetree%}
+                      {% full_tree_for_model tag.Tag as nodes %}
+<!--                       
+                        var json =  {% for genre,structure in nodes|tree_info %}{% if structure.new_level %} [{ {% else %} },{ {% endif %}
+                        id: "{{ genre.id }}",
+                        children: {% if genre.is_leaf_node %}[]{% endif %}
+                        {% for level in structure.closed_levels %}}]{% endfor %}{% endfor %} -->
+                      
+                      <!-- {% recursetree tags %}
+                      {% if not node.is_leaf_node %}
+                        <li class="dropdown-submenu">
+                        {% else %}
+                        <li class="dropdown">
+                      {% endif %}
+                          <a href="{% url 'iform:iform_update' node.id %}">{{ node.name }}</a>
+                              {% if not node.is_leaf_node %}
+                                  <ul class="dropdown-menu">
+                                      <li>
+                                        <a href="{% url 'iform:iform_update' node.id %}" class="dropdown-item" tabindex="-1">{{ children }}</a>
+                                      </li>
+                                  </ul>
+                              {% endif %}
+                      </li>
+                      {% endrecursetree %} -->
+                    <li role="separator" class="divider"></li>
+                      <li><a href="boop!"></a></li>
+                    </ul>
+                  </li>
+              
+            
+            <!-- ****** END ********* -->
+
             <!-- Tag Menu -->
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
               aria-expanded="true">Tags<span class="caret"></span></a>
-              
               <ul class="dropdown-menu">
-                <li class="dropdown"> 
-                  <a href="{% url 'tag:tag_list' %}">List</a>
-                  <a href="{% url 'tag:tag_create' %}">Create</a>
-                  <li role="separator" class="divider"></li>
-                    
-                  {% recursetree tags %}
-                  {% if not node.is_leaf_node %}
-                    <li class="dropdown-submenu">
-                    {% else %}
-                    <li class="dropdown">
-                  {% endif %}
-                      <a href="{% url 'tag:tag_update' node.id %}">{{ node.name }}</a>
-                          {% if not node.is_leaf_node %}
-                              <ul class="dropdown-menu">
-                                  <li>
-                                    <a href="{% url 'tag:tag_update' node.id %}" class="dropdown-item" tabindex="-1">{{ children }}</a>
-                                  </li>
-                              </ul>
-                          {% endif %}
-                  </li>
-                  {% endrecursetree %}
-            
-                    
-                        
-                </li>
+                <li><a href="{% url 'tag:tag_list' %}">List</a></li>
+                <li><a href="{% url 'tag:tag_create' %}">Create</a></li> 
+                <li role="separator" class="divider"></li>
+                  <ul class="dropdown-submenu"> 
+                    {% recursetree tags %}
+                        <li><a href="{% url 'tag:tag_update' node.id %}">{{ node.name }}</a></li>
+                            {% if not node.is_leaf_node %}
+                            <ul class="dropdown-submenu"> 
+                              <li>
+                                <a href="{% url 'tag:tag_update' node.id %}" class="dropdown-item" tabindex="-1">{{ children }}</a>
+                              </li>  
+                            </ul>
+                            {% endif %}
+                    {% endrecursetree %}
+                      </il>
+                  </ul>
               </ul>
             </li>
                         
-            <!-- Tag Menu Standard css -->
-            <!-- <li class="dropdown">
+            <!-- Tag Menu mobile css -->
+            <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
-              aria-expanded="true">Tags<span class="caret"></span></a>
-              
+              aria-expanded="true">Tags for mobile<span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li class="dropdown"> 
                   <a href="{% url 'tag:tag_list' %}">List</a>
+                </li>
+                <li>
                   <a href="{% url 'tag:tag_create' %}">Create</a>
+                </li>  
                   <li role="separator" class="divider"></li>
                     
-                  {% recursetree tags %} -->
+                  {% recursetree tags %}
                   <!-- Add the arrow icon for submenus -->
-                      <!-- {% if not node.is_leaf_node %}
+                      {% if not node.is_leaf_node %}
                         <ul class="dropdown-submenu">
                       {% else %}
                         <ul class="dropdown">
                       {% endif %}
-                        <a href="{% url 'tag:tag_update' node.id %}">{{ node }}</a>
+                        <a href="{% url 'tag:tag_update' node.id %}">{{ node.name }}</a>
                         {% if not node.is_leaf_node %}
                             <ul class="dropdown-menu">
                                 <a href="{% url 'tag:tag_update' node.id %}">{{ children }}</a>
@@ -103,7 +148,7 @@
                         
                 </li>
               </ul>
-            </li> -->
+            </li>
 
 
             <!-- Form Menu -->
@@ -174,7 +219,7 @@
                     </li>
                   {% endif %}
 
-                  <li role="separator" class="divider"></li>
+                  <!-- <li role="separator" class="divider"></li> -->
                     
                   {% if user.is_authenticated %}                    
                     <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>   

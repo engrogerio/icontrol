@@ -1,17 +1,38 @@
-1 Fix bug with dates from abstract class all models inherit - ok
-1 Fix bug with created and updated user from abstract class all models inherit
+https://riccardo.forina.me/bootstrap-your-django-admin-in-3-minutes/
+https://mbraak.github.io/django-mptt-admin/#options
 
+
+1 Fix bug with dates from abstract class all models inherit - ok
+
+1 Fix bug with created and updated user from abstract class all models inherit - OK
+
+2 Create field iform many to many to user and field 
+iform_perm (can_edit)
+inspection_create_perm(can_create), 
+inspection_view(can_view_all, can_view_own, can_edit_all, 
+    can_edit_own) for every model.That will give permissions 
 
 2 Default screen with all created inspections? Generic Statistics like max,min,avg, 
     qtd for every tag? Last 5 years and then last 12 mths and last 30 days
-
-3 Create relation 1 to many for Sections type tag or for Form? 
+    
+3 Create tag Date, DateTime and time for now or default value now, day, month, year, etc
 
 4 Iform form should have where to point if should be used for creating an inspection or not.
 
 5 Certify if tag type section is not being saved on db
 
-6 On form, user should be allowed to mark which filds will be shown on inspections list.
+7 Add and asterisc on the field label when field is not optional -ok
 
-7 Add and asterisc on the field label when field is not optional
+8- Show tree inside TAG for iform_tag dropboxes
 
+9- Create Dashboard = multiple forms (copy app form)
+
+10- Create a JSON interface as in https://spapas.github.io/2013/12/24/django-dynamic-forms/#id5 / https://github.com/abbasovalex/django-SplitJSONWidget-form
+
+12- The final idea is to have this as form designer http://jeremydorn.com/json-editor/ and then, save data back
+to the database using icontrol
+13- Use this Dashboard https://github.com/almasaeed2010/AdminLTE
+
+14- JSON Menu done
+15- A new customer must automatically create a ws with url with customer CNPJ like:
+ https://xxxx/icontrol/api/v1.0/12334341239999/form/list
