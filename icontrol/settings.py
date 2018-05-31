@@ -55,11 +55,8 @@ INSTALLED_APPS = [
     'app.inspection',
     'app.iform',
     'app.registration',
-    'django_mptt_admin',
-    'treenav',
     'fontawesome',
-    'polymorphic_tree',
-    'polymorphic',
+
 ]
 
 MIDDLEWARE = [
@@ -86,7 +83,6 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                'treenav.context_processors.treenav_active',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'app.tag.context_processors.add_variable_to_context',

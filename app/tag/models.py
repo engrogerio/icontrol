@@ -8,16 +8,13 @@ from django_tables2.utils import A
 import django_filters
 from app.iform.models import IFormTag
 import pint
-from mptt.models import MPTTModel, TreeForeignKey
+
 from fontawesome.fields import IconField
 
-class Tag( MPTTModel, ControlModel):
+class Tag(ControlModel):
 
     class Meta:
         db_table='tag'
-
-    class MPTTMeta:
-        order_insertion_by = ['name']
 
     icon = IconField()
       
@@ -53,7 +50,7 @@ class Tag( MPTTModel, ControlModel):
  
     max_length = IntegerField(default=0) # 0 means no limit or 1000 characteres
     choices_source = ForeignKey('Tag', blank=True, null=True )
-    parent = TreeForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
+    parent = ForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
     help_text = CharField('Help Text', blank=True, null=True, max_length=255)
 
     def __unicode__(self):
@@ -66,31 +63,6 @@ class Tag( MPTTModel, ControlModel):
     def form(self):    
         return self.iformtag_tag__iform__name
 
-    # TODO: fix to show trees on the dropdowns for tag
-    # https://djangopy.org/package-of-week/categories-with-django-mptt/
-    # this currently has no functionality and its here just for reference.
-    # def get_slug_list(self):
-    # 		try:
-	# 		ancestors = self.get_ancestors(include_self=True)
-	# 	except:
-	# 		ancestors = []
-	# 	else:
-	# 		ancestors = [ i.slug for i in ancestors]
-	# 	slugs = []
-	# 	for i in range(len(ancestors)):
-	# 		slugs.append('/'.join(ancestors[:i+1]))
-	# 	return slugs
-
-    # def as_tree(self):
-    #     children = list(self.children.all())
-    #     branch = bool(children)
-    #     yield branch, self
-    #     for child in children:
-    #         for next in child.as_tree():
-    #             print('next=',next, ' - child=',child)
-    #             yield next
-    #     print(branch, '- ', children)
-    #     yield branch, None
     
     def get_tag_nav(self, request,tags=None):
         """Recursively build a list of tags. The resulting list is meant to be iterated over in a view"""

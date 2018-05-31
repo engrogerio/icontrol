@@ -1,3 +1,4 @@
+
 {% load static %}
 {# Load the tag library #}
 {% load bootstrap3 %}
@@ -11,7 +12,7 @@
 <!-- {% bootstrap_css %} -->
 <!-- {% bootstrap_javascript %} -->
 
-{# Display django.contrib.messages as Bootstrap alerts #}
+{# Display django.contrib.messages as Bootstrap 2s #}
 {% bootstrap_messages %}
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,69 +34,14 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="https://jonmiles.github.io/bootstrap-treeview/js/bootstrap-treeview.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.0.8/jstree.min.js"></script>
-        <script src="{% static "js/treetogle.js" %}"></script>
-
-        <script src="{% static "js/fontawesome-all.js" %}"></script>
-
-        <script type="text/javascript">
-            $(function(){
-              $(".search-input").keyup(function() {
-
-              var searchString = $(this).val();
-              console.log(searchString);
-              $('#jstree').jstree('search', searchString);
-              });
-              
-              var jsonData = [
-              {"id":"27","parent":"#","text":"Listar Formulários", "a_attr": {"href": "/iform/list"},},
-              {"id":"28","parent":"27","text":"Executar trabalho em regime de turnos ininterruptos de revezamento"},
-              {"id":"30","parent":"28","text":"Executar trabalho em jornada de sobreaviso"},
-              {"id":"33","parent":"28","text":"Trabalhar em ferrovias"},
-              {"id":"35","parent":"33","text":"Utilizar sistemas alternativos eletrônicos de marcação do ponto"}
-            ];
-
-            $("#tree").jstree({
-              "plugins": ["search"],
-                 core:{
-                     "data": jsonData
-                 },
-                 "search": {  
-                  "case_insensitive": true,
-                  "show_only_matches" : true
-                  },
-             })
-             //this mades the tree clicable link works
-             //https://stackoverflow.com/questions/8378561/
-             .bind("select_node.jstree", function (e,data) { 
-               $('#jstree').jstree('save_state');
-             })
-             .on("activate_node.jstree", function(e,data){
-               document.location.href = data.node.a_attr.href; 
-               });
-
-              //this makes the dropdown stays opened until while we click outside
-              //https://stackoverflow.com/questions/19740121/
-             
-             $('#keepdown').on({
-              "shown.bs.dropdown": function() { this.closable = true; },
-              "click":             function(e) { 
-                  var target = $(e.target);
-                  if(target.hasClass("dropdown-toggle")) 
-                    this.closable = true;
-                  else 
-                    this.closable = false; 
-                    
-              },
-              "hide.bs.dropdown":  function() { return this.closable; }
-          });
 
 
-
-            // $('#keepdown').on('hide.bs.dropdown', function () {
-            //   return false;
-            //   });
-            });
+      <div style="display: none;" id="jsonData">{{ tags|safe }}</div> 
+        <script type="text/javascript"> 
+          var jsonData = $.parseJSON($('#jsonData').html()); 
         </script>
+        <script src="{% static "js/treetogle.js" %}"></script>
+        <script src="{% static "js/fontawesome-all.js" %}"></script>
     
  <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-static-top">
@@ -112,8 +58,6 @@
         <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
             <!-- Tag Menu -->
-
-          
             <li class="dropdown" id="keepdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
               aria-expanded="true">Menu<span class="caret"></span></a>
@@ -133,7 +77,9 @@
                   <li><a href="{% url 'tag:tag_list' %}">List</a></li>
                   <li><a href="{% url 'tag:tag_create' %}">Create</a></li> 
                   <li role="separator" class="divider"></li>
-                   
+                  {% for tag in tags %}
+                   <li> {{ tag.name }} </li>
+                   {% endfor %}
                 </ul>
               </li>
           

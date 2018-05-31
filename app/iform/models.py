@@ -4,20 +4,16 @@ from django.db.models import UUIDField, ManyToManyField, CharField, IntegerField
 import uuid
 from icontrol.models import ControlModel
 from django.db import models
-from mptt.models import MPTTModel, TreeForeignKey
 
 # Create your models here.
-class IForm(MPTTModel, ControlModel):
+class IForm(ControlModel):
 
     class Meta:
         db_table='iform'
 
-    class MPTTMeta:
-        order_insertion_by = ['name']
-
     id = UUIDField(primary_key=True, default=uuid.uuid4,)
     name = CharField(max_length=255, default='New Form')
-    parent = parent = TreeForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
+    parent = parent = ForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
 
     def __unicode__(self):
         return self.name
