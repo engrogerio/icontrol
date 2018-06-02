@@ -10,14 +10,20 @@ $(function(){
 
 
   $("#tree").jstree({
-    "plugins": ["search"],
+    "plugins": ["search", "contextmenu"],
        core:{
-           "data": jsonData
+         // so that create works
+          "check_callback" : false,
+          "data": jsonData
        },
        "search": {  
         "case_insensitive": true,
         "show_only_matches" : true
         },
+        'themes': {
+          'name': 'proton',
+          'responsive': true
+      }
    })
    //this mades the tree clicable link works
    //https://stackoverflow.com/questions/8378561/

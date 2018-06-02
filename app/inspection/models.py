@@ -13,4 +13,5 @@ class Inspection(ControlModel):
     iform = ForeignKey(IForm, related_name='inspection_iform', null=True, blank=True)
 
     def __unicode__(self):
-        return self.iform.name.encode('utf-8')
+        created_when = self.created_when
+        return self.iform.name +' - '+ created_when.strftime("%Y-%m-%d %H:%M")
