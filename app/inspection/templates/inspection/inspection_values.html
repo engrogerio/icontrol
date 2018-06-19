@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+{% block head %}
+
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+<link type="text/css" rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/redmond/jquery-ui.css"/>
+{% endblock %}
+<body>
+	<h2>Collected data from form: {{ iform.name }}</h2>
+
+<button id="exporttable">Export to Excel</button>
+<div id="jsGrid"></div> 
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+
+<script src="{% static "js/inspection-grid.js" %}"></script>
+
+<div style="display: none;" id="jsonDataGrid">{{ value_list|safe }}</div> 
+<script type="text/javascript"> 
+	var collectionData = $.parseJSON($('#jsonDataGrid').html()); 
+</script>
+
+<div style="display: none;" id="jsonTagGrid">{{ tag_list|safe }}</div> 
+<script type="text/javascript"> 
+	var tagData = $.parseJSON($('#jsonTagGrid').html());
+</script>
+
+
+</body>
+{% endblock%}

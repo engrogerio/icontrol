@@ -5,27 +5,48 @@
 {% load trans blocktrans from i18n %}
 {% load bootstrap_toolkit %}
 {% load staticfiles %}
+{% load bootstrap3 %}
 
-<h3>Tags</h3>
+
 
 {% if table.page %}
-    <div class="table-container">
+  <div class="table-container">
 {% endif %}
+
+<h3>Tags</h3>
+{% if filter %}
+    <form action="" method="get" class="form form-inline">
+        {% bootstrap_form filter.form layout='inline' %}
+        {% bootstrap_button 'filter' %}
+    </form>
+{% endif %}
+
 
 {% block table %}
  <div class="table-responsive">
     <table class="table table-hover table-bordered table-striped"{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
         {% block table.thead %}
             <thead>
-            <tr>
-                {% for column in table.columns %}
-                    {% if column.orderable %}
-                        <th {{ column.attrs.th.as_html }}><a href="{% querystring table.prefixed_order_by_field=column.order_by_alias.next %}">{{ column.header }}</a></th>
-                    {% else %}
-                        <th {{ column.attrs.th.as_html }}>{{ column.header }}</th>
-                    {% endif %}
-                {% endfor %}
-            </tr>
+                    <tr> 
+                            <th colspan="5">                                         
+                                <form method="post" class="form-inline form-search pull-right">
+                                  {% csrf_token %}
+                                    <div>
+                                      <input id="search_form_id" name="search" type="text" class="form-control col-md-3" placeholder="Tag name"{% if search %} value="{{ search }}"{% endif %}>
+                                      <button type="submit" class="btn btn-small btn-dark"><i class="fa fa-search"></i> Search</button>
+                                    </div>              
+                                </form>
+                            </th>                  
+                    </tr>         
+                <tr>
+                    {% for column in table.columns %}
+                        {% if column.orderable %}
+                            <th {{ column.attrs.th.as_html }}><a href="{% querystring table.prefixed_order_by_field=column.order_by_alias.next %}">{{ column.header }}</a></th>
+                        {% else %}
+                            <th {{ column.attrs.th.as_html }}>{{ column.header }}</th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
             </thead>
         {% endblock table.thead %}
         {% block table.tbody %}
@@ -62,3 +83,4 @@
   {% endblock pagination %}
   </div>
 {% endif %}
+

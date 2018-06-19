@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'app.inspection',
     'app.iform',
     'app.registration',
+    'app.chart',
     'fontawesome',
 
 ]

@@ -3,7 +3,7 @@
 from django.db.models import ForeignKey
 from icontrol.models import ControlModel
 from app.iform.models import IForm
-
+from django.db import models
 
 class Inspection(ControlModel):
 

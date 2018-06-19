@@ -21,7 +21,7 @@ inspection_view(can_view_all, can_view_own, can_edit_all,
 
 5 Certify if tag type section is not being saved on db
 
-7 Add and asterisc on the field label when field is not optional -ok
+7 Add and asterisc on the field label when field is not optional - fix
 
 8- Show tree inside TAG for iform_tag dropboxes
 
@@ -31,8 +31,10 @@ inspection_view(can_view_all, can_view_own, can_edit_all,
 
 12- The final idea is to have this as form designer http://jeremydorn.com/json-editor/ and then, save data back
 to the database using icontrol
+
 13- Use this Dashboard https://github.com/almasaeed2010/AdminLTE
 
 14- JSON Menu done
+
 15- A new customer must automatically create a ws with url with customer CNPJ like:
  https://xxxx/icontrol/api/v1.0/12334341239999/form/list

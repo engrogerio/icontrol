@@ -6,6 +6,10 @@ from django_tables2 import RequestConfig
 from app.tag.models import Tag, TagTable
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
+from app.tag.filters import TagFilter
+from django_filters.views import FilterView
+from django_tables2.views import SingleTableMixin
+
 
 def TagIndex(request):
     return HttpResponse ('Tag list')
@@ -69,3 +73,10 @@ class TagDelete(LoginRequiredMixin, DeleteView):
     form_class = TagForm
     success_url = reverse_lazy('tag:tag_list')
 
+
+class FilteredTagView(SingleTableMixin, FilterView):
+    table_class = TagTable
+    model = Tag
+    template_name = 'tag_list.html'
+
+    filterset_class = TagFilter

@@ -8,8 +8,9 @@ from django_tables2.utils import A
 import django_filters
 from app.iform.models import IFormTag
 import pint
-
 from fontawesome.fields import IconField
+
+
 
 class Tag(ControlModel):
 
@@ -33,11 +34,18 @@ class Tag(ControlModel):
     RADIO = 13
     
 
+    JSGRID_TYPE = ((TEXT, 'text'), (INTEGER, 'number'), (FLOAT, 'number'),
+                    (CHOICES, 'select'), (BOOL, 'checkbox'), (DATE, 'date'), (TIME, 'time'),
+                    (DATETIME, 'datetime'), 
+                    (FILE, 'File'), (SECTION, 'section'),
+                    (LARGE_TEXT, 'textarea'), (RADIO, 'radiobutton'),
+                    )
+
     TYPE_CHOICES = ((TEXT, 'Text'), (INTEGER, 'Integer Number'), (FLOAT, 'Float Point Number'),
                     (CHOICES, 'Choices'), (BOOL, 'Yes/No'), (DATE, 'Date'), (TIME, 'Time'),
                     (DATETIME, 'Date and Time'), # (MONEY, 'Money'), 
                     (FILE, 'File'), (SECTION, 'Section'),
-                    (LARGE_TEXT, 'Large Text'), (RADIO, 'Radio Button'),
+                    (LARGE_TEXT, 'Text Area'), (RADIO, 'Radio Button'),
                     )
 
     UNIT_CHOICES = [(units, units) for units in dir(pint.UnitRegistry())]
@@ -48,7 +56,7 @@ class Tag(ControlModel):
     unit = CharField('Unit', choices=UNIT_CHOICES, blank=True, null=True, max_length=40)
     decimal_places = IntegerField(default=0)
  
-    max_length = IntegerField(default=0) # 0 means no limit or 1000 characteres
+    max_length = IntegerField(default=100) # 0 means no limit or 1000 characteres
     choices_source = ForeignKey('Tag', blank=True, null=True )
     parent = ForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
     help_text = CharField('Help Text', blank=True, null=True, max_length=255)
@@ -63,26 +71,31 @@ class Tag(ControlModel):
     def form(self):    
         return self.iformtag_tag__iform__name
 
-    
-    def get_tag_nav(self, request,tags=None):
-        """Recursively build a list of tags. The resulting list is meant to be iterated over in a view"""
-        if tags==None:
-            #get the root categories
-            tags = Tag.objects.filter(parent=None)
-            tags[0].active=True
-        else:
-            yield 'in'
+    #@property
+    def jsgrid_type(self): 
+        type_dic = dict(self.JSGRID_TYPE) 
+        return type_dic[self.type]
 
-        for tag in tags:
-            yield tag
-            subcats = Tag.objects.select_related().filter(parent=tag)
-            if len(subcats):
-                tag.leaf=False
-                for x in self.get_tag_nav(request,subcats):
-                    yield x
-            else:
-                tag.leaf=True
-        yield 'out'
+    
+    # def get_tag_nav(self, request,tags=None):
+    #     """Recursively build a list of tags. The resulting list is meant to be iterated over in a view"""
+    #     if tags==None:
+    #         #get the root categories
+    #         tags = Tag.objects.filter(parent=None)
+    #         tags[0].active=True
+    #     else:
+    #         yield 'in'
+
+    #     for tag in tags:
+    #         yield tag
+    #         subcats = Tag.objects.select_related().filter(parent=tag)
+    #         if len(subcats):
+    #             tag.leaf=False
+    #             for x in self.get_tag_nav(request,subcats):
+    #                 yield x
+    #         else:
+    #             tag.leaf=True
+    #     yield 'out'
         
 class TagTable(tables.Table):
 
@@ -95,4 +108,7 @@ class TagTable(tables.Table):
         fields = ('parent', 'name', 'unit', 'type', 'created_when' )
         attrs = {"class": "table-striped table-bordered"}
         empty_text = "There are no tags matching the search criteria..."
+        attrs = {"class": "table-striped table-bordered"}
+        
+
 

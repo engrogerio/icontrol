@@ -5,7 +5,8 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 from app.inspection.models import Inspection
 from app.tag.models import Tag
-from app.iform.models import IForm
+from app.value.models import Value
+from app.iform.models import IForm, IFormTag
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib import messages
@@ -13,6 +14,7 @@ from app.value.models import Value
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
+import json
 
 class InspectionList(LoginRequiredMixin, ListView):
     model = Inspection
@@ -165,7 +167,7 @@ def inspection_create (request, pk=None):
             inspection.created_by = request.user
             inspection.save()
 
-            # creates new Values for each field and save to the database
+            # creates new Values for each field and...
             for field in form:
                 value = Value()
                 data = field.value()
@@ -174,7 +176,7 @@ def inspection_create (request, pk=None):
                 value.number = tag
                 value.inspection = inspection
 
-                # finally save the object in db
+                # ...finally save the object in db
                 add_data(tag, value, data, inspection)
             messages.add_message(request, messages.SUCCESS, 'Inspection was succefully created!')
             return HttpResponseRedirect(reverse('iform:iform_list'))
@@ -186,29 +188,35 @@ def inspection_create (request, pk=None):
 
     return render(request, 'inspection/inspection_create.html', {'form': form, 'iform': iform.name})
 
-# from django.views.generic import TemplateView
-# from django.contrib.auth.models import User
+# this will work on js-grid
+def get_data_collections (request, iform_pk=None):
+    """
+    Return a list of JSON for the requested iform
+    with all (lazy?) data for use in grids or charsd
+    """
+    # grab all inspections from the requested iform
+    inspections = Inspection.objects.filter(iform__id=iform_pk)
+    dic = value_dic = {}
+    values_list = []
+    for inspection in inspections:
+        # grab all values for this inspection
+        values = Value.objects.filter(inspection_id=inspection.id)
+        for value in values:
+            tag = Tag.objects.get(id=value.tag_id)
+            value_dic [tag.name] = value.number if value.number else value.text #, 'unit': tag.unit}
+        values_list.append(value_dic)
+        value_dic={}
 
-# import arrow
-
-
-# class AnalyticsIndexView(TemplateView):
-#     template_name = 'analytics/admin/index.html'
-
-#     def get_context_data(self, **kwargs):
-#         context = super(AnalyticsIndexView, self).get_context_data(**kwargs)
-#         context['30_day_registrations'] = self.thirty_day_registrations()
-#         return context
-
-#     def thirty_day_registrations(self):
-#         final_data = []
-
-#         date = arrow.now()
-#         for day in xrange(1, 30):
-#             date = date.replace(days=-1)
-#             count = User.objects.filter(
-#                 date_joined__gte=date.floor('day').datetime,
-#                 date_joined__lte=date.ceil('day').datetime).count()
-#             final_data.append(count)
-
-#         return final_data
+    # get list of dictionaries for defining jsGrid fields    
+    tags = IFormTag.objects.filter(iform_id = iform_pk).only('tag')
+    jsonizable_tag_list = []
+    for tag in tags: 
+        jsonizable_tag_list.append({"name":tag.tag.name,
+        "title":tag.tag.name+' ('+tag.tag.unit+')' if tag.tag.unit else tag.tag.name , "type": tag.tag.jsgrid_type(), "width":tag.tag.max_length})
+    #jsonizable_tag_list.append({ "type": "control" })
+    return render(request, 'inspection/inspection_values.html',
+        {
+            "iform": IForm.objects.get(id=iform_pk),
+            "value_list": json.dumps(values_list), 
+            "tag_list": json.dumps(jsonizable_tag_list)
+        })
