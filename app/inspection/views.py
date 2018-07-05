@@ -203,7 +203,9 @@ def get_data_collections (request, iform_pk=None):
         values = Value.objects.filter(inspection_id=inspection.id)
         for value in values:
             tag = Tag.objects.get(id=value.tag_id)
-            value_dic [tag.name] = value.number if value.number else value.text #, 'unit': tag.unit}
+            farg = "{0:."+ str(tag.decimal_places) +"f}"
+            #value_dic [tag.name] = value.number if value.number else value.text
+            value_dic [tag.name] = str(farg.format(value.number)) if value.number else value.text
         values_list.append(value_dic)
         value_dic={}
 
