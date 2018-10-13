@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-
+from __future__ import unicode_literals
+from django.utils.encoding import python_2_unicode_compatible
 from django.db.models import CharField, ForeignKey, DecimalField
 from icontrol.models import ControlModel
 from app.tag.models import Tag
@@ -8,7 +9,7 @@ from app.inspection.models import Inspection
 
 # Create your models here.
 
-
+@python_2_unicode_compatible
 class Value(ControlModel):
 
     class Meta:
@@ -20,5 +21,5 @@ class Value(ControlModel):
     text = CharField(max_length=1000, blank=True, null=True)
     inspection =  ForeignKey(Inspection, related_name='values')
     
-    def __unicode__(self):
+    def __str__(self):
         return self.text or str(self.number)

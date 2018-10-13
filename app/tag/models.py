@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+from django.utils.encoding import python_2_unicode_compatible
 from django.db.models import UUIDField, CharField, ForeignKey, IntegerField, FloatField, ManyToManyField
 import uuid
 from icontrol.models import ControlModel
 import django_tables2 as tables
 from django_tables2.utils import A
-import django_filters
 from app.iform.models import IFormTag
 import pint
 from fontawesome.fields import IconField
 
 
-
+@python_2_unicode_compatible
 class Tag(ControlModel):
 
     class Meta:
@@ -61,7 +62,7 @@ class Tag(ControlModel):
     parent = ForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
     help_text = CharField('Help Text', blank=True, null=True, max_length=255)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.unit:
             return self.name + ' ('+self.get_unit_display()+')'
         else:
@@ -75,27 +76,6 @@ class Tag(ControlModel):
     def jsgrid_type(self): 
         type_dic = dict(self.JSGRID_TYPE) 
         return type_dic[self.type]
-
-    
-    # def get_tag_nav(self, request,tags=None):
-    #     """Recursively build a list of tags. The resulting list is meant to be iterated over in a view"""
-    #     if tags==None:
-    #         #get the root categories
-    #         tags = Tag.objects.filter(parent=None)
-    #         tags[0].active=True
-    #     else:
-    #         yield 'in'
-
-    #     for tag in tags:
-    #         yield tag
-    #         subcats = Tag.objects.select_related().filter(parent=tag)
-    #         if len(subcats):
-    #             tag.leaf=False
-    #             for x in self.get_tag_nav(request,subcats):
-    #                 yield x
-    #         else:
-    #             tag.leaf=True
-    #     yield 'out'
         
 class TagTable(tables.Table):
 
