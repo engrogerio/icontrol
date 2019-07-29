@@ -66,7 +66,7 @@ $(function(){
      document.location.href = data.node.a_attr.href; 
      });
 
-    //this makes the dropdown stays opened until while we click outside
+    //this makes the dropdown stays opened while we click outside
     //https://stackoverflow.com/questions/19740121/
    
    $('#keepdown').on({

@@ -6,34 +6,36 @@
 <form method="post">
     {% csrf_token %}
 
-     
-        <form class="form-inline">
+        
             <div class="form-group">
         
-            {% for field in form.visible_fields %}
+                {% for field in form.visible_fields %}
+                
+                    <!-- if field is another form , render the form fields as an inline inside a group
+                    that allows hiding-->
+                    <!-- {% if field.label == 'Nome Inspetor' %} -->
+                        <!-- <div class="col-md-12">	 -->
+                    <!-- {% endif %} -->
 
-                <!-- {% if field.label == 'Nome Inspetor' %} -->
-                    <!-- <div class="col-md-12">	 -->
-                <!-- {% endif %} -->
-
-                  {% if field.errors %}
-	              <ul>
-	                {% for error in field.errors %}
-	                 <li>{{ error }}</li>
-	                {% endfor %}
-	              </ul>
-                  {% endif %}
-                {% bootstrap_field field %}
-                <!-- {% if field.label == 'Nome Inspetor' %} -->
-                    <!-- </div>	 -->
-                <!-- {% endif %} -->
-                <p></p>
-            {% endfor %}
+                    {% if field.errors %}
+                    <ul>
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% bootstrap_field field %}
+                    <!-- {% if field.label == 'Nome Inspetor' %} -->
+                        <!-- </div>	 -->
+                    <!-- {% endif %} -->
+                    <p></p>
+                {% endfor %}
 	
                 <button type="submit" class="btn btn-primary btn-sm" >Submit</button>
                 <button type="reset" class="btn btn-warning btn-sm" >Reset form</button>
                 <a href="{% url 'inspection:inspection_list' %}" class="btn btn-danger btn-sm">Cancel</a>
-           
+            </div>
+     
         
 </form>
 {% endblock %}

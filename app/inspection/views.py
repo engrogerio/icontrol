@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from app.inspection.forms import InspectionForm
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 from app.inspection.models import Inspection
 from app.tag.models import Tag
@@ -13,7 +13,6 @@ from django.contrib import messages
 from app.value.models import Value
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.urlresolvers import reverse
 import json
 
 class InspectionList(LoginRequiredMixin, ListView):
@@ -60,7 +59,7 @@ def add_data(tag, value, data, inspection):
         text = str(data)
     elif tag.type in (tag.TEXT, tag.LARGE_TEXT, tag.DATETIME, tag.TIME, tag.DATE, 
                         tag.SECTION,):
-        text = data.encode('utf-8')
+        text = str(data)
     elif tag.type == tag.FLOAT:
         number = float(data) if data else None
     elif tag.type == tag.INTEGER:
@@ -170,10 +169,11 @@ def inspection_create (request, pk=None):
             # creates new Values for each field and...
             for field in form:
                 value = Value()
-                data = field.value()
+
                 tag = Tag.objects.get(id=field.name)
+                data = field.field.choices[int(field.data)if field.data else 0][1].text if tag.type in (Tag.CHOICES, Tag.RADIO) else field.value() 
                 value.created_by = request.user
-                value.number = tag
+                # value.number = tag
                 value.inspection = inspection
 
                 # ...finally save the object in db
@@ -215,7 +215,7 @@ def get_data_collections (request, iform_pk=None):
     for tag in tags: 
         jsonizable_tag_list.append({"name":tag.tag.name,
         "title":tag.tag.name+' ('+tag.tag.unit+')' if tag.tag.unit else tag.tag.name , "type": tag.tag.jsgrid_type(), "width":tag.tag.max_length})
-    #jsonizable_tag_list.append({ "type": "control" })
+    # jsonizable_tag_list.append({ "type": "control" })
     return render(request, 'inspection/inspection_values.html',
         {
             "iform": IForm.objects.get(id=iform_pk),

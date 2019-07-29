@@ -12,7 +12,6 @@ class TagForm(forms.ModelForm):
     class Meta:
         model = Tag
         fields = [
-        'parent',
         'name',
         'help_text',
         'type',
@@ -21,8 +20,8 @@ class TagForm(forms.ModelForm):
         'decimal_places',
         'max_length',
         ]
+
         labels = {
-        'parent': 'Parent',
         'name': 'Name',
         'help_text':'Help Text',
         'type': 'Type',
@@ -33,7 +32,6 @@ class TagForm(forms.ModelForm):
 
         }
         widgets = {
-        'parent': forms.Select(attrs={'class':'form-control'}), 
         'name': forms.TextInput(attrs={'class':'form-control'}),
         'help_text': forms.TextInput(attrs={'class':'form-control'}),
         'type': forms.Select(attrs={'class':'form-control'}), 
@@ -43,3 +41,7 @@ class TagForm(forms.ModelForm):
         'max_length': forms.NumberInput(attrs={'class':'form-control'}),
 
       }
+
+    def __init__(self, *args, **kwargs):
+        super(TagForm, self).__init__(*args, **kwargs)
+        # self.fields['folder'].queryset = Tag.objects.filter(type=Tag.FOLDER)

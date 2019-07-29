@@ -5,6 +5,9 @@ from app.iform.models import IForm, IFormTag
 from app.tag.models import Tag
 from django.forms.models import inlineformset_factory
 
+class TagPathModelChoiceField(forms.ModelChoiceField):
+    def tag_path(self, obj):
+         return obj.tag_path()
 
 class IFormForm(forms.ModelForm):
     # parent = forms.ModelChoiceField(queryset=IForm.objects.order_by('parent'))
@@ -41,13 +44,19 @@ class IFormForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'parent': forms.Select(attrs={'class': 'form-control'}),
 
-        }
+        } 
 
 
 class IFormTagForm(forms.ModelForm):
 
-    # tag = forms.ModelChoiceField(queryset=Tag.objects) #.order_by('name'))
+    def __init__(self, *args, **kwargs):
+        super(IFormTagForm,self).__init__(*args, **kwargs)
+        self.fields['tag'].queryset = Tag.objects.all()
 
+
+    # To have tag names to choose on iform in order by name I need a ModelChoiceField
+    tags = Tag.objects.order_by('name')
+    tag = TagPathModelChoiceField(queryset=tags)
     class Meta:
         model = IFormTag
         exclude = ('created_by', 'created_when', 'id')
@@ -56,7 +65,7 @@ class IFormTagForm(forms.ModelForm):
             'order',
             'tag',
             'default_value',
-            'width',
+            # 'width',
             'read_only',
             'required',
         ]
@@ -71,7 +80,7 @@ class IFormTagForm(forms.ModelForm):
             'order': ('Enter the position of the tag on the form'),
             'tag': ('Choose the tag'),
             'default_value': ('Enter the default value for this tag on this form'),
-            'width': ('Enter the width of this field on the form'),
+            # 'width': ('Enter the width of this field on the form'),
             'read_only': ('Enter the position of the tag on the form'),
             'required': ('Mark if user should enter a value'),
         }
@@ -85,7 +94,7 @@ class IFormTagForm(forms.ModelForm):
             'order': forms.NumberInput(attrs={'style': 'width:100'}),
             #'required': forms.Select(attrs={'class':'form-control'}),
             'default_value': forms.TextInput(attrs={'class':'form-control'}),
-            'width': forms.NumberInput(attrs={'style': 'width:100'})
+            # 'width': forms.NumberInput(attrs={'style': 'width:100'})
         }
 
 

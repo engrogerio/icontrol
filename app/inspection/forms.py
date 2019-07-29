@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
-# from app.inspection.models import Inspection
 from app.iform.models import IForm, IFormTag
 from app.tag.models import Tag
 from app.value.models import Value
@@ -20,10 +19,7 @@ class InspectionForm(forms.Form):
         iform_tag=IFormTag.objects.filter(iform=iform).get(tag=tag)
         attrs = dict()
         if tag.max_length==0:tag.max_length=1000
-        if iform_tag.width > 0:
-            attrs = {
-                'style': 'width:'+str(iform_tag.width )
-            }
+
         # put an asterisc after the tag label when it's a required field
         tag_label = str(tag) if not iform_tag.required else str(tag)+' *'
 
@@ -89,8 +85,11 @@ class InspectionForm(forms.Form):
             widget_parameters.pop('max_length')
             # bring all options based on all values for the tag choosen on choices_source 
             values = Value.objects.filter(tag=tag.choices_source).exclude(text__exact='').order_by('text') #.values_list('text')
-            for n,v in enumerate(values):choices.append([n,v])
-            return forms.ChoiceField(
+            print(values)
+            for n,v in enumerate(values):
+                choices.append([n,v])
+                print(type(v))
+            return forms.ChoiceField( 
             widget=forms.Select(attrs=attrs),
             choices= choices,
             **widget_parameters
@@ -105,7 +104,7 @@ class InspectionForm(forms.Form):
             choices= choices,
             widget=forms.RadioSelect(attrs=attrs),
             **widget_parameters
-            )     
+            )
         # elif tag.type == tag.MONEY:
         # self.fields['%s' % tag.id] = MoneyField(
             # label=str(tag),
@@ -136,11 +135,11 @@ class InspectionForm(forms.Form):
     def __init__(self, *args, **kwargs):
         iform_id = kwargs.pop('iform_id', None)
         iform = IForm.objects.get(id=iform_id)
-        tag_list = IForm.objects.get(pk=iform_id).iform_tag.all().values('tag')
+        tag_list = IForm.objects.get(pk=iform_id).iforms.all().values('tag')
         tags = Tag.objects.filter(pk__in=tag_list).filter(
-            iform_tag_tag__iform=iform).order_by('iform_tag_tag__order')
+            iform_tags__iform=iform).order_by('iform_tags__order')
         super(InspectionForm, self).__init__(*args, **kwargs)
-        #Loop for assembling the form
+        print('Tags ****',tags)
+        #Loop for assembling the form. Disregard folders 
         for i, tag in enumerate(tags):
             self.fields['%s' % tag.id] = self.get_widget(tag, iform)
-           

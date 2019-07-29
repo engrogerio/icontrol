@@ -7,12 +7,14 @@ import json
 
 
 def add_variable_to_context(request):
+    """
+    Builds the tree menu
+    """
     tags = Tag.objects.all().order_by('name')
     iforms = IForm.objects.all().order_by('name')
     iformtags = IFormTag.objects.all().order_by('order')
     inspections = Inspection.objects.all().order_by('iform','created_when')
     obj_list = []
-
 
     #creating branch for create new tags
     inspection_branch = {"id":"new_tags", "parent":"#", "text":"Create Tag", "icon": "fa fa-tags",
@@ -30,7 +32,7 @@ def add_variable_to_context(request):
     obj_list.append(inspection_branch)
 
     #creating branch for iforms
-    inspection_branch = {"id":"iforms", "parent":"#", "text":"Edit Form", "icon": "fa fa-list"}
+    inspection_branch = {"id":"iforms", "parent":"#", "text":"Edit Form and Tags", "icon": "fa fa-list"}
     obj_list.append(inspection_branch)
 
     #creating branch for create new inspections
@@ -45,25 +47,38 @@ def add_variable_to_context(request):
     inspection_branch = {"id":"inspections", "parent":"#", "text":"Edit Inspection", "icon": "fa fa-file"}
     obj_list.append(inspection_branch)
 
-
     #Inserting iForm editions
     for iform in iforms:
         parent_id = 'iforms'
-        if iform.parent: parent_id=str(iform.parent.id)
+        if iform.parent: 
+            parent_id=str(iform.parent.id)
         js_iform={"id":str(iform.id), "parent":parent_id, "text":iform.name, "icon": "fa fa-list",
             "a_attr": {"href": "/iform/update/"+str(iform.id)}}
         obj_list.append(js_iform)
-        #Inserting tags on iforms
-        for iformtag in iformtags.filter(iform=iform):
-            parent_id = 'iforms'
-            if iformtag.iform: parent_id=str(iformtag.iform.id)
-            js_iformtag={"id":str(iformtag.id), "parent":parent_id, "text":iformtag.tag.name, "icon": "fa fa-tag",
-                "a_attr": {"href": "/tag/update/"+str(iformtag.tag.id)}}
-            obj_list.append(js_iformtag)
-        
-   
 
-   #Inserting create new inspections
+    # Inserting assigned tags on iforms
+    #ifolders = iformtags.filter(tag__type=Tag.FOLDER)
+    for iformtag in iformtags:
+        icon = "fa fa-tag"
+        parent_id = 'iforms'
+        parent_id = str(iformtag.iform.id) 
+
+        js_iformtag={"id":str(iformtag.tag.id), "parent":parent_id, "text":iformtag.tag.name, "icon": icon,
+            "a_attr": {"href": "/tag/update/"+str(iformtag.tag.id)}}
+        obj_list.append(js_iformtag)
+
+    # Inserting unassigned tags  on iforms
+    unassigned_tags = Tag.objects.exclude(id__in = iformtags.values('tag'))
+    # Unassigned tags appears under the root item
+    parent_id = 'iforms'
+    for tag in unassigned_tags:       
+        icon = "fa fa-tag"
+        js_iformtag={"id":str(tag.id), "parent":parent_id, "text":tag.name, "icon": icon,
+            "a_attr": {"href": "/tag/update/"+str(tag.id)}}
+        obj_list.append(js_iformtag)
+
+
+    #Inserting create new inspections
     for form in iforms:
         fparent_id = 'new_inspection'
         if form.parent: fparent_id=str(form.parent.id)+'new'

@@ -1,11 +1,10 @@
-Django==1.11
-django-bootstrap-toolkit==2.15.0
+Django==2.1.4
 django-bootstrap3==11.0.0
 django-filter==2.0.0
+django-filters==0.2.1
 django-fontawesome==1.0
-django-tables2==2.0.1
+django-tables2==2.0.3
 fontawesome==5.3.1.post1
 Pint==0.8.1
-pkg-resources==0.0.0
-pytz==2018.5
+pytz==2018.7
 PyYAML==3.13

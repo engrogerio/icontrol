@@ -1,5 +1,5 @@
 from app.iform.forms import IFormForm
-from django.core.urlresolvers import reverse_lazy, reverse
+from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -15,7 +15,6 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 def IFormIndex(request):
     return HttpResponse ('Form list')
-
 
 class IFormList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = ('iform.change_iform',) 
@@ -70,12 +69,13 @@ def iform_create (request):
 def iform_update(request, pk=None):
     # get iform being updated
     iform = IForm.objects.get(id=pk)
-
+    iform_tags_len = IFormTag.objects.filter(iform=iform).count()
     # get the form related to iform
     iform_form = IFormForm(request.POST, instance=iform)
-
-    # get the iform_tags form instance
-    IFormTagFormSet = inlineformset_factory(IForm, IFormTag, form=IFormTagForm, extra=0)
+     
+    # get the iform_tags form instance.
+    IFormTagFormSet = inlineformset_factory(IForm, IFormTag, form=IFormTagForm, 
+                        extra = 1 if iform_tags_len==0 else 0 , can_delete = True)
 
     if request.method == 'POST':
 
@@ -83,23 +83,26 @@ def iform_update(request, pk=None):
         iform_form = IFormForm(request.POST, instance= iform)
         #iformtag_form = IFormTagForm(request.POST, iform_id=iform.id)
 
-        # Create formset from the tags related to the iform
-        iform_tag_formset = IFormTagFormSet(request.POST, instance = iform)
+        # Create formset from the tags related to the iform ordering by field order     
+        iform_tag_formset = IFormTagFormSet(request.POST, instance = iform, queryset=IFormTag.objects.filter(iform=iform).all().order_by('order')) #iform.iforms.tag.order_by('order'))
 
         if iform_form.is_valid() and iform_tag_formset.is_valid():
             # saves iform form with the user
             iform = iform_form.save(commit=False)
             iform.updated_by = request.user
             iform.save()
-            # first, exclude all tags from the tags queryset
-            IFormTag.objects.filter(iform=iform).delete()
-
-            for tag in iform_tag_formset.forms:
-                # if tags are not marked as Delete ,save them
-                if tag.cleaned_data['DELETE'] != True:
-                    iform_tag = tag.save(commit=False)
-                    iform_tag.iform = iform
-                    iform_tag.save()
+            # delete when marked as delete loop
+            for iform_tag_form in iform_tag_formset.forms:
+                if iform_tag_form.cleaned_data['DELETE'] == True:
+                    IFormTag.objects.filter(iform=iform).filter(tag__name=iform_tag_form.cleaned_data['tag']).delete()
+                    
+            # save them adjusting the order
+            for n, iform_tag_form in enumerate(iform_tag_formset.forms):
+                iform_tag = iform_tag_form.save(commit=False)
+                iform_tag.iform = iform
+                iform_tag.order = n + 1
+                iform_tag.save()
+                
             messages.add_message(request, messages.SUCCESS, 'Form was succefully updated!')
             return HttpResponseRedirect(reverse('iform:iform_list'))
             
@@ -110,7 +113,7 @@ def iform_update(request, pk=None):
         iform_form = IFormForm(instance=iform)
         # get iform_tags formset with the values
         iform_tag_formset = IFormTagFormSet(instance=iform,
-                                            queryset=iform.iform_tag.order_by('order'))
+                                            queryset=iform.iforms.order_by('order'))
     c = {'iform': iform_form, 'iform_tag': iform_tag_formset}
     # c.update(csrf(request)) # for invalidate every request
     return render(request, 'iform/iform_form.html', c)

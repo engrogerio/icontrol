@@ -23,10 +23,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
         url(r'^$', RedirectView.as_view(url='iform/list')),
-        url(r'^tag/', include('app.tag.urls', namespace='tag')),
-        url(r'^iform/', include('app.iform.urls', namespace='iform')),
-        url(r'^inspection/', include('app.inspection.urls', namespace='inspection')),
-        url(r'^chart/', include('app.chart.urls', namespace='chart')),
+        url(r'^tag/', include(('app.tag.urls', 'tag'), namespace='tag')),
+        url(r'^iform/', include(('app.iform.urls','iform'), namespace='iform')),
+        url(r'^inspection/', include(('app.inspection.urls','inspections'), namespace='inspection')),
+        url(r'^chart/', include(('app.chart.urls','chart'), namespace='chart')),
         url(r'^admin/', admin.site.urls),
         url(r'^accounts/', include('django.contrib.auth.urls')),
 
