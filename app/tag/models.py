@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-from django.utils.encoding import python_2_unicode_compatible
+from django.db import models
 from django.db.models import UUIDField, CharField, ForeignKey, IntegerField, FloatField, ManyToManyField
 import uuid
 from icontrol.models import ControlModel
@@ -12,7 +12,6 @@ import pint
 from fontawesome_5.fields import IconField
 
 
-@python_2_unicode_compatible
 class Tag(ControlModel):
 
     class Meta:
@@ -58,8 +57,10 @@ class Tag(ControlModel):
     decimal_places = IntegerField(default=0)
  
     max_length = IntegerField(default=100) # 0 means no limit or 1000 characteres
-    choices_source = ForeignKey('Tag', blank=True, null=True )
-    parent = ForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
+    choices_source = ForeignKey('Tag', blank=True, null=True, 
+                                on_delete=models.CASCADE )
+    parent = ForeignKey('self', blank=True, null=True, related_name='children', 
+                        db_index=True, on_delete=models.CASCADE)
     help_text = CharField('Help Text', blank=True, null=True, max_length=255)
 
     def __str__(self):

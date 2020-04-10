@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from app.inspection.forms import InspectionForm
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 from app.inspection.models import Inspection
 from app.tag.models import Tag
@@ -13,7 +13,6 @@ from django.contrib import messages
 from app.value.models import Value
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.urlresolvers import reverse
 import json
 
 class InspectionList(LoginRequiredMixin, ListView):

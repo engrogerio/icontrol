@@ -11,7 +11,8 @@ class Inspection(ControlModel):
     class Meta:
         db_table='inspection'
 
-    iform = ForeignKey(IForm, related_name='inspection_iform', null=True, blank=True)
+    iform = ForeignKey(IForm, related_name='inspection_iform', null=True, blank=True
+                       , on_delete=models.CASCADE)
 
     def __str__(self):
         created_when = self.created_when
