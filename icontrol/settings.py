@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'app.iform',
     'app.registration',
     'app.chart',
-    'fontawesome',
+    'fontawesome_5',
 
 ]
 

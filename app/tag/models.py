@@ -9,7 +9,7 @@ import django_tables2 as tables
 from django_tables2.utils import A
 from app.iform.models import IFormTag
 import pint
-from fontawesome.fields import IconField
+from fontawesome_5.fields import IconField
 
 
 @python_2_unicode_compatible

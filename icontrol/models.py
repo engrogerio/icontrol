@@ -18,5 +18,3 @@ class ControlModel(models.Model):
     updated_by = ForeignKey(User, null=True, blank=True, related_name="updated"+get_related_name.__func__())
     created_when = DateTimeField(auto_now_add=True)
     updated_when = DateTimeField(auto_now=True)
-
-     

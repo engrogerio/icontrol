@@ -63,7 +63,7 @@ def add_variable_to_context(request):
         
    
 
-   #Inserting create new inspections
+    #Inserting create new inspections
     for form in iforms:
         fparent_id = 'new_inspection'
         if form.parent: fparent_id=str(form.parent.id)+'new'
@@ -71,7 +71,7 @@ def add_variable_to_context(request):
             "a_attr": {"href": "/inspection/create/"+str(form.id)}}
         obj_list.append(js_form)
 
-   #Inserting show data collections
+    #Inserting show data collections
     for form in iforms:
         fparent_id = 'show_values'
         if form.parent: fparent_id=str(form.parent.id)+'show'

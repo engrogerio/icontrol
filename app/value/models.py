@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-from django.utils.encoding import python_2_unicode_compatible
 from django.db.models import CharField, ForeignKey, DecimalField
 from icontrol.models import ControlModel
 from app.tag.models import Tag
@@ -9,7 +8,6 @@ from app.inspection.models import Inspection
 
 # Create your models here.
 
-@python_2_unicode_compatible
 class Value(ControlModel):
 
     class Meta:

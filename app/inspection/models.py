@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-from django.utils.encoding import python_2_unicode_compatible
 from django.db.models import ForeignKey
 from icontrol.models import ControlModel
 from app.iform.models import IForm
 from django.db import models
 
-@python_2_unicode_compatible
 class Inspection(ControlModel):
 
     class Meta:

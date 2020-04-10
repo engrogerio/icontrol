@@ -143,4 +143,3 @@ class InspectionForm(forms.Form):
         #Loop for assembling the form
         for i, tag in enumerate(tags):
             self.fields['%s' % tag.id] = self.get_widget(tag, iform)
-           
