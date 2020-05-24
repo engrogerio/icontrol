@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-<<<<<<< HEAD
 from django.utils.encoding
 from django.db import models
 from django.db.models import UUIDField
@@ -10,10 +9,6 @@ from django.db.models import ForeignKey
 from django.db.models import IntegerField 
 from django.db.models import FloatField
 from django.db.models import ManyToManyField
-=======
-from django.db import models
-from django.db.models import UUIDField, CharField, ForeignKey, IntegerField, FloatField, ManyToManyField
->>>>>>> 0128cebd3a705f885946dadfc854e54c4cf9443b
 import uuid
 from icontrol.models import ControlModel
 import django_tables2 as tables

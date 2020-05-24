@@ -17,11 +17,7 @@ class Value(ControlModel):
     tag = ForeignKey(Tag, on_delete=models.CASCADE)
     number = DecimalField(decimal_places=10, max_digits=50, blank=True, null=True)
     text = CharField(max_length=1000, blank=True, null=True)
-<<<<<<< HEAD
     inspection = ForeignKey(Inspection, related_name='values', on_delete=models.CASCADE)
-=======
-    inspection =  ForeignKey(Inspection, related_name='values', on_delete=models.CASCADE)
->>>>>>> 0128cebd3a705f885946dadfc854e54c4cf9443b
     
     def __str__(self):
         return self.text or str(self.number)
