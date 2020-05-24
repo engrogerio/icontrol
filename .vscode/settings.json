@@ -1,0 +1,10 @@
+{
+    "python.linting.pylintEnabled": false,
+    "python.linting.pycodestyleEnabled": true,
+    "python.linting.enabled": true,
+    "files.exclude": {
+        "**/.pyc": true,
+        "**/*.pyc": true
+    },
+    "python.pythonPath": ".venv/bin/python"
+}

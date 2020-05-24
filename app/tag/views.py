@@ -1,5 +1,5 @@
 from app.tag.forms import TagForm
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django_tables2 import RequestConfig

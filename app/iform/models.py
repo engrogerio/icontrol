@@ -14,9 +14,13 @@ class IForm(ControlModel):
     id = UUIDField(primary_key=True, default=uuid.uuid4,)
     name = CharField(max_length=255, default='New Form')
     parent = ForeignKey('self', blank=True, null=True, related_name='children', 
+<<<<<<< HEAD
         db_index=True)
+=======
+                        db_index=True, on_delete = models.CASCADE)
+>>>>>>> 0128cebd3a705f885946dadfc854e54c4cf9443b
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 

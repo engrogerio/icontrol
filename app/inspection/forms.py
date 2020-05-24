@@ -17,15 +17,17 @@ class InspectionForm(forms.Form):
         """
         Passing a Tag and an Iform will return the correct widget based on Tag spec
         """
-        iform_tag=IFormTag.objects.filter(iform=iform).get(tag=tag)
+
+        iform_tag = IFormTag.objects.filter(iform=iform).get(tag=tag)
         attrs = dict()
-        if tag.max_length==0:tag.max_length=1000
+        if tag.max_length == 0:
+            tag.max_length = 1000
         if iform_tag.width > 0:
             attrs = {
                 'style': 'width:'+str(iform_tag.width )
             }
-        # put an asterisc after the tag label when it's a required field
-        tag_label = str(tag) if not iform_tag.required else str(tag)+' *'
+        # put an asterisc before the tag label when it's a required field
+        tag_label = f"{'*' if iform_tag.required else ''} {str(tag)}"
 
         widget_parameters = {
             'label': tag_label,
@@ -34,7 +36,7 @@ class InspectionForm(forms.Form):
             'initial': iform_tag.default_value,
             'help_text': tag.help_text,
             'disabled': iform_tag.read_only, 
-            #'placeholder': 'placeholder'
+            # 'placeholder': 'placeholder'
         }
         
         if tag.type == tag.TEXT:
@@ -143,4 +145,3 @@ class InspectionForm(forms.Form):
         #Loop for assembling the form
         for i, tag in enumerate(tags):
             self.fields['%s' % tag.id] = self.get_widget(tag, iform)
-           

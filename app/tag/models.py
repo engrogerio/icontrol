@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+<<<<<<< HEAD
 from django.utils.encoding
 from django.db import models
 from django.db.models import UUIDField
@@ -9,16 +10,19 @@ from django.db.models import ForeignKey
 from django.db.models import IntegerField 
 from django.db.models import FloatField
 from django.db.models import ManyToManyField
+=======
+from django.db import models
+from django.db.models import UUIDField, CharField, ForeignKey, IntegerField, FloatField, ManyToManyField
+>>>>>>> 0128cebd3a705f885946dadfc854e54c4cf9443b
 import uuid
 from icontrol.models import ControlModel
 import django_tables2 as tables
 from django_tables2.utils import A
 from app.iform.models import IFormTag
 import pint
-from fontawesome.fields import IconField
+from fontawesome_5.fields import IconField
 
 
-@python_2_unicode_compatible
 class Tag(ControlModel):
 
     class Meta:
@@ -60,17 +64,14 @@ class Tag(ControlModel):
     id = UUIDField(primary_key=True, default=uuid.uuid4, )
     name = CharField(max_length=255)
     type = IntegerField('Field Type', choices=TYPE_CHOICES, blank=True, null=True)
-    unit = CharField('Unit', choices=UNIT_CHOICES, blank=True, null=True, max_length=40)
+    unit = CharField('Unit', choices=UNIT_CHOICES, blank=True, null=True, max_length=100)
     decimal_places = IntegerField(default=0)
  
     max_length = IntegerField(default=100) # 0 means no limit or 1000 characteres
-    choices_source = ForeignKey('Tag', on_delete=models.CASCADE, blank=True, null=True )
-    parent = ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE, related_name='children', db_index=True)
     help_text = CharField('Help Text', blank=True, null=True, max_length=255)
 
     def __str__(self):
         if self.unit:
-            return self.name + ' ('+self.get_unit_display()+')'
         else:
             return self.name
 
