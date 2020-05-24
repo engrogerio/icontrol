@@ -10,4 +10,4 @@ icon==0.0.3
 Pint==0.8.1
 #pkg-resources==0.0.0
 pytz==2018.5
-PyYAML==3.13
+PyYAML==5.1
