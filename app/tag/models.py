@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-from django.utils.encoding import python_2_unicode_compatible
-from django.db.models import UUIDField, CharField, ForeignKey, IntegerField, FloatField, ManyToManyField
+from django.utils.encoding
+from django.db import models
+from django.db.models import UUIDField
+from django.db.models import CharField
+from django.db.models import ForeignKey 
+from django.db.models import IntegerField 
+from django.db.models import FloatField
+from django.db.models import ManyToManyField
 import uuid
 from icontrol.models import ControlModel
 import django_tables2 as tables
@@ -58,8 +64,8 @@ class Tag(ControlModel):
     decimal_places = IntegerField(default=0)
  
     max_length = IntegerField(default=100) # 0 means no limit or 1000 characteres
-    choices_source = ForeignKey('Tag', blank=True, null=True )
-    parent = ForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
+    choices_source = ForeignKey('Tag', on_delete=models.CASCADE, blank=True, null=True )
+    parent = ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE, related_name='children', db_index=True)
     help_text = CharField('Help Text', blank=True, null=True, max_length=255)
 
     def __str__(self):

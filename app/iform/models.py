@@ -13,7 +13,8 @@ class IForm(ControlModel):
 
     id = UUIDField(primary_key=True, default=uuid.uuid4,)
     name = CharField(max_length=255, default='New Form')
-    parent = parent = ForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
+    parent = ForeignKey('self', blank=True, null=True, related_name='children', 
+        db_index=True)
 
     def __unicode__(self):
         return self.name
@@ -26,8 +27,8 @@ class IFormTag(models.Model):
         # every tag must appears only once on one form
         unique_together = ["iform", "tag"]
 
-    iform = ForeignKey(IForm, related_name='iform_tag') 
-    tag = ForeignKey('tag.Tag', related_name='iform_tag_tag')
+    iform = ForeignKey(IForm, related_name='iform_tag', on_delete=models.CASCADE) 
+    tag = ForeignKey('tag.Tag', related_name='iform_tag_tag', on_delete=models.CASCADE)
     order = IntegerField(default=1) # TODO: This must be automatically increased
     read_only = BooleanField(default=False)
     required = BooleanField(default=False)
