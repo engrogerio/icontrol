@@ -1,12 +1,13 @@
 
 {% load static %}
+<link rel="shortcut icon" href="{%  static 'favicon.ico' %}">
 {# Load the tag library #}
 {% load bootstrap3 %}
 
 <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>
 <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 <link type="text/css" rel="stylesheet" href="https://jonmiles.github.io/bootstrap-treeview/css/bootstrap-treeview.css">
-<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.0.8/themes/default/style.min.css">
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.9/themes/default/style.min.css">
 <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap-submenu.css" %}"/>
 <link rel="stylesheet" type="text/css" href="{% static "css/dropdown.css" %}"/>
 
@@ -35,7 +36,7 @@
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="https://jonmiles.github.io/bootstrap-treeview/js/bootstrap-treeview.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.0.8/jstree.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.9/jstree.min.js"></script>
 
 
       <div style="display: none;" id="jsonData">{{ tags|safe }}</div> 

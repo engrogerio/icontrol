@@ -16,7 +16,7 @@ class IForm(ControlModel):
     parent = ForeignKey('self', blank=True, null=True, related_name='children', 
                         db_index=True, on_delete = models.CASCADE)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
