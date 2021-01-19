@@ -84,7 +84,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'app.tag.context_processors.add_tree_menu_to_context',
+                'app.menu.context_processors.add_tree_menu_to_context',
 
             ],
         },

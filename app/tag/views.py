@@ -22,7 +22,6 @@ class TagList(LoginRequiredMixin, ListView):
     queryset = Tag.objects.all()
     table = TagTable(queryset)
 
-
     def get_context_data(self, **kwargs):
         context = super(TagList, self).get_context_data(**kwargs)
         table = TagTable(Tag.objects.order_by('-pk')) #filter(self.kwargs['company']).order_by('-pk'))

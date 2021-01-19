@@ -3,7 +3,7 @@
 from app.inspection.forms import InspectionForm
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
-from app.inspection.models import Inspection
+from app.inspection.models import Inspection, InspectionTable
 from app.tag.models import Tag
 from app.value.models import Value
 from app.iform.models import IForm, IFormTag
@@ -14,13 +14,30 @@ from app.value.models import Value
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 import json
+from django_tables2 import RequestConfig
+from django_tables2 import LazyPaginator
 
 class InspectionList(LoginRequiredMixin, ListView):
     model = Inspection
-    template_name = 'inspection/inspection_list.html'
-    paginate_by = 20
+    context_name = 'inspection'
+    ordering = ['iform__name', 'created_when']
+    queryset = Inspection.objects.all()
+    table = InspectionTable(queryset)
+    paginator_class = LazyPaginator
 
-
+        
+    def get_context_data(self, **kwargs):
+        context = super(InspectionList, self).get_context_data(**kwargs)
+        table = InspectionTable(Inspection.objects.order_by('-pk'))
+        table.paginate(page=self.request.GET.get("page", 1), per_page=25)
+        table.paginator = True
+        RequestConfig(self.request).configure(table)
+        context['filter'] = filter
+        RequestConfig(self.request, paginate={'per_page': 30}).configure(table)
+        context['table'] = table
+        context['iform'] = 'iForm'
+        return context
+    
 class InspectionDelete(LoginRequiredMixin, DeleteView):
     model = Inspection
     template_name = 'inspection/inspection_delete.html'

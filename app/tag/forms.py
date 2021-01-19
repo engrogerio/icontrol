@@ -7,7 +7,7 @@ from app.tag.models import Tag
 class TagForm(forms.ModelForm):
 
     choices_source = forms.ModelChoiceField(required=False, queryset=Tag.objects.order_by('name'),
-    widget=forms.Select(attrs={'class':'form-control'}))
+    widget=forms.Select(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Tag

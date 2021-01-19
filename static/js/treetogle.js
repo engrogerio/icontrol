@@ -30,41 +30,13 @@ contextMenu: function customMenu(node) {
   };
 }
 
-
 $(function(){
     $(".search-input").keyup(function() {
-    var searchString = $(this).val();
+    var searchString = $(this).val().trim();
     console.log(searchString);
     $('#jstree').jstree('search', searchString);
     });
 
-  $("#tree").jstree({
-    "plugins": ["search" ], //, "contextmenu"],
-       core:{
-         // so that create works
-          "check_callback" : true,
-          "data": jsonData
-       },
-       "search": {  
-        "case_insensitive": true,
-        "show_only_matches" : true
-        },
-        'themes': {
-          'name': 'proton',
-          'responsive': true
-      },
-        'context_menu':{
-          'items': customMenu
-        }
-   })
-   //this mades the tree clicable link works
-   //https://stackoverflow.com/questions/8378561/
-   .bind("select_node.jstree", function (e,data) { 
-     $('#jstree').jstree('save_state');
-   })
-   .on("activate_node.jstree", function(e,data){
-     document.location.href = data.node.a_attr.href; 
-     });
 
     //this makes the dropdown stays opened until while we click outside
     //https://stackoverflow.com/questions/19740121/
