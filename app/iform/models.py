@@ -15,7 +15,7 @@ class IForm(ControlModel):
     id = UUIDField(primary_key=True, default=uuid.uuid4,)
     name = CharField(max_length=255, default='New Form')
     parent = ForeignKey('self', blank=True, null=True, related_name='children', 
-                        db_index=True, on_delete=models.CASCADE)
+        db_index=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -24,7 +24,7 @@ class IForm(ControlModel):
 class IFormTag(models.Model):
 
     class Meta:
-        db_table='iform_tag'
+        db_table= 'iform_tag'
         # every tag must appears only once on one form
         unique_together = ["iform", "tag"]
 
