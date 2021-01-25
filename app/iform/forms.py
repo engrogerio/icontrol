@@ -23,7 +23,9 @@ class IFormForm(forms.ModelForm):
         # exclude = ('created_by', 'created_when', 'id')
         fields = [
             'name',
-            'parent'
+            'parent',
+            'layout',
+            'collapsible'
         ]
         # labels = {
         # 	'name': 'Name',
@@ -40,7 +42,8 @@ class IFormForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'parent': forms.Select(attrs={'class': 'form-control'}),
-
+            'layout': forms.Select(attrs={'class':'form-control'}),
+            'collapsible': forms.Select(attrs={'class':'form-control'}),
         }
 
 
@@ -71,8 +74,8 @@ class IFormTagForm(forms.ModelForm):
             'order': ('Enter the position of the tag on the form'),
             'tag': ('Choose the tag'),
             'default_value': ('Enter the default value for this tag on this form'),
-            'width': ('Enter the width of this field on the form'),
-            'read_only': ('Enter the position of the tag on the form'),
+            'width': ('Enter the width of this field on the form (0=max)'),
+            'read_only': ('Mark if field should be read only'),
             'required': ('Mark if user should enter a value'),
         }
         # error_messages = {
@@ -84,16 +87,16 @@ class IFormTagForm(forms.ModelForm):
             'tag': forms.Select(), #attrs={'class': 'form-control'}),
             'order': forms.NumberInput(attrs={'style': 'width:100'}),
             #'required': forms.Select(attrs={'class':'form-control'}),
-            'default_value': forms.TextInput(attrs={'class':'form-control'}),
-            'width': forms.NumberInput(attrs={'style': 'width:100'})
+            'default_value': forms.TextInput(attrs={'class':'form-control', 'placeholder': 'default value'}),
+            'width': forms.NumberInput(attrs={'style': 'width:100', 'placeholder': 'width'})
         }
 
 
-IFormTagFormSet = inlineformset_factory(
-    IForm,
-    IFormTag,
-    IFormForm,
-    IFormTagForm,
-    fields=('tag', 'order', 'read_only'),
-    extra=1,
-    can_delete=True)
+# IFormTagFormSet = inlineformset_factory(
+#     IForm,
+#     IFormTag,
+#     IFormForm,
+#     IFormTagForm,
+#     fields=('tag', 'order', 'read_only'),
+#     extra=1,
+#     can_delete=True)

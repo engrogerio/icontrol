@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 from icontrol.models import ControlModel
 from django.db.models import CharField, IntegerField
 

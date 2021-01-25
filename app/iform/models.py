@@ -2,12 +2,22 @@
 
 from django.db.models import UUIDField, ManyToManyField, CharField, IntegerField, ForeignKey, BooleanField
 import uuid
+
+from django.forms.fields import ChoiceField
 from icontrol.models import ControlModel
 from django.db import models
 
 
-# Create your models here.
 class IForm(ControlModel):
+
+    NORMAL = 0
+    INLINE = 1
+    FIXED = 0
+    COLLAPSIBLEOPEN = 1
+    COLLAPSIBLECLOSED = 2
+    LAYOUT = ((NORMAL, 'Normal'), (INLINE, 'Inline'))
+    COLLAPSIBLE = ((FIXED, 'Fixed'), (COLLAPSIBLEOPEN, 'Default Opened'), (COLLAPSIBLECLOSED, 'Default Closed'))
+
 
     class Meta:
         db_table = 'iform'
@@ -15,13 +25,15 @@ class IForm(ControlModel):
     id = UUIDField(primary_key=True, default=uuid.uuid4,)
     name = CharField(max_length=255, default='New Form')
     parent = ForeignKey('self', blank=True, null=True, related_name='children', 
-        db_index=True, on_delete=models.CASCADE)
+                        db_index=True, on_delete=models.CASCADE)
+    collapsible = IntegerField(choices=COLLAPSIBLE, default=FIXED)
+    layout = IntegerField(choices=LAYOUT, default=NORMAL)
 
     def __str__(self):
         return self.name
 
 
-class IFormTag(models.Model):
+class IFormTag(ControlModel):
 
     class Meta:
         db_table= 'iform_tag'

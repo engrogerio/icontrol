@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-# from __future__ import unicode_literals
 from django.db.models import CharField, ForeignKey, DecimalField
 from icontrol.models import ControlModel
 from app.tag.models import Tag

@@ -1,39 +1,25 @@
-
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 {% block content %}
-<h3>New inspection: {{ iform }}</h3>
+<h3>New inspection: {{ iform.name }}</h3>
 <form method="post">
     {% csrf_token %}
+    <div class="col-md-12">
+        {% if iform.get_layout_display  == 'Inline' %}
+            <div class="form-inline">
+                <div class="tag-formset">
+                    {% bootstrap_form form layout='inline' %}
+                    <legend></legend>
+                </div>
+            </div>
+        {% else %}
+                {% bootstrap_form form %}
+        {% endif %}
+    </div>
+    <button type="submit" class="btn btn-primary btn-sm" >Submit</button>
+    <button type="reset" class="btn btn-warning btn-sm" >Reset form</button>
+    <a href="{% url 'inspection:inspection_list' %}" class="btn btn-danger btn-sm">Cancel</a>
 
-     
-        <form class="form-inline">
-            <div class="form-group">
-        
-            {% for field in form.visible_fields %}
-
-                <!-- {% if field.label == 'Nome Inspetor' %} -->
-                    <!-- <div class="col-md-12">	 -->
-                <!-- {% endif %} -->
-
-                  {% if field.errors %}
-	              <ul>
-	                {% for error in field.errors %}
-	                 <li>{{ error }}</li>
-	                {% endfor %}
-	              </ul>
-                  {% endif %}
-                {% bootstrap_field field %}
-                <!-- {% if field.label == 'Nome Inspetor' %} -->
-                    <!-- </div>	 -->
-                <!-- {% endif %} -->
-                <p></p>
-            {% endfor %}
-	
-                <button type="submit" class="btn btn-primary btn-sm" >Submit</button>
-                <button type="reset" class="btn btn-warning btn-sm" >Reset form</button>
-                <a href="{% url 'inspection:inspection_list' %}" class="btn btn-danger btn-sm">Cancel</a>
-           
-        
 </form>
+
 {% endblock %}

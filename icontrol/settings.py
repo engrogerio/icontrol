@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'app.registration',
     'app.chart',
     'fontawesome_5',
+    
 
 ]
 

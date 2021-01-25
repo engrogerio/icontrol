@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-from django.utils.encoding
 from django.db import models
 from django.db.models import UUIDField
 from django.db.models import CharField
@@ -38,20 +36,21 @@ class Tag(ControlModel):
     SECTION = 11
     LARGE_TEXT = 12
     RADIO = 13
+    CHECKBOX = 14
     
 
     JSGRID_TYPE = ((TEXT, 'text'), (INTEGER, 'number'), (FLOAT, 'number'),
-                    (CHOICES, 'select'), (BOOL, 'checkbox'), (DATE, 'date'), (TIME, 'time'),
-                    (DATETIME, 'datetime'), 
+                    (CHOICES, 'select'), (BOOL, 'checkbox'), (DATE, 'date'),
+                    (TIME, 'time'), (DATETIME, 'datetime'), 
                     (FILE, 'File'), (SECTION, 'section'),
-                    (LARGE_TEXT, 'textarea'), (RADIO, 'radiobutton'),
+                    (LARGE_TEXT, 'textarea'), (RADIO, 'radiobutton'), (CHECKBOX, 'Check Box')
                     )
 
     TYPE_CHOICES = ((TEXT, 'Text'), (INTEGER, 'Integer Number'), (FLOAT, 'Float Point Number'),
                     (CHOICES, 'Choices'), (BOOL, 'Yes/No'), (DATE, 'Date'), (TIME, 'Time'),
                     (DATETIME, 'Date and Time'), # (MONEY, 'Money'), 
                     (FILE, 'File'), (SECTION, 'Section'),
-                    (LARGE_TEXT, 'Text Area'), (RADIO, 'Radio Button'),
+                    (LARGE_TEXT, 'Text Area'), (RADIO, 'Radio Button'), (CHECKBOX, 'Check Box')
                     )
 
     UNIT_CHOICES = [(units, units) for units in dir(pint.UnitRegistry())]
@@ -61,12 +60,14 @@ class Tag(ControlModel):
     type = IntegerField('Field Type', choices=TYPE_CHOICES, blank=True, null=True)
     unit = CharField('Unit', choices=UNIT_CHOICES, blank=True, null=True, max_length=100)
     decimal_places = IntegerField(default=0)
- 
     max_length = IntegerField(default=100) # 0 means no limit or 1000 characteres
+    choices_source = ForeignKey('Tag', blank=True, null=True,
+                                on_delete=models.CASCADE)
     help_text = CharField('Help Text', blank=True, null=True, max_length=255)
 
     def __str__(self):
         if self.unit:
+            return self.name + ' ('+self.get_unit_display()+')'
         else:
             return self.name
 
@@ -87,10 +88,7 @@ class TagTable(tables.Table):
     
     class Meta:
         model = Tag
-        fields = ('parent', 'name', 'unit', 'type', 'created_when' )
+        fields = ('name', 'unit', 'type', 'created_when')
         attrs = {"class": "table-striped table-bordered"}
         empty_text = "There are no tags matching the search criteria..."
         attrs = {"class": "table-striped table-bordered"}
-        
-
-

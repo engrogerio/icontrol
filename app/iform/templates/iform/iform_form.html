@@ -7,11 +7,20 @@
     function cloneMore(selector, type) {
     var newElement = $(selector).clone(true);
     var total = $('#id_' + type + '-TOTAL_FORMS').val();
-
+    var widthdefault = 0;
     newElement.find(':input').each(function() {
         var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
         var id = 'id_' + name;
-        $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+        var order = parseInt(total)+1
+        var tag_name = name.slice(-5)
+        if (tag_name==='order'){
+                value=order
+            } else if (tag_name==='width'){
+                value=0
+            } else {
+                value=''
+            }
+        $(this).attr({'name': name, 'id': id}).val(value).removeAttr('checked');
     });
     newElement.find('label').each(function() {
         var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');

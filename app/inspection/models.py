@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
 from django.db.models import ForeignKey
 from icontrol.models import ControlModel
 from app.iform.models import IForm
@@ -15,7 +14,8 @@ class Inspection(ControlModel):
         db_table = 'inspection'
 
     iform = ForeignKey(IForm, related_name='inspection_iform', on_delete=models.CASCADE, null=True, blank=True)
-
+    parent = ForeignKey(IForm, related_name='parent_iform', on_delete=models.CASCADE, null=True, blank=True)
+    
     def __str__(self):
         created_when = self.created_when
         return f'{self.iform.name} - {created_when.strftime("%Y-%m-%d %H:%M")}'

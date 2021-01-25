@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
-# from app.inspection.models import Inspection
+from app.inspection.models import Inspection
 from app.iform.models import IForm, IFormTag
 from app.tag.models import Tag
 from app.value.models import Value
 import datetime
+from django.forms.models import inlineformset_factory
 
 
 # TODO: shoud I use validators? https://docs.djangoproject.com/en/1.11/ref/validators/
@@ -24,7 +25,8 @@ class InspectionForm(forms.Form):
             tag.max_length = 1000
         if iform_tag.width > 0:
             attrs = {
-                'style': 'width:'+str(iform_tag.width )
+                'style': 'width:'+str(iform_tag.width ), 
+                # 'placeholder': tag.name
             }
         # put an asterisc before the tag label when it's a required field
         tag_label = f"{'*' if iform_tag.required else ''} {str(tag)}"
@@ -36,13 +38,12 @@ class InspectionForm(forms.Form):
             'initial': iform_tag.default_value,
             'help_text': tag.help_text,
             'disabled': iform_tag.read_only, 
-            # 'placeholder': 'placeholder'
         }
         
         if tag.type == tag.TEXT:
             return forms.CharField(
-            widget=forms.TextInput(attrs=attrs), 
-            **widget_parameters
+                widget=forms.TextInput(attrs=attrs), 
+                **widget_parameters
             )
         elif tag.type == tag.LARGE_TEXT:
             attrs.update({'rows':4})
@@ -94,20 +95,33 @@ class InspectionForm(forms.Form):
             for n,v in enumerate(values):choices.append([n,v])
             return forms.ChoiceField(
             widget=forms.Select(attrs=attrs),
-            choices= choices,
+            choices=choices,
             **widget_parameters
             )        
         elif tag.type == tag.RADIO:
             choices=[]
             widget_parameters.pop('max_length')
-            # bring all options based on all values for the tag choosen on choices_source 
+            # bring all options based on values for the tag choosen on choices_source 
             values = Value.objects.filter(tag=tag.choices_source).exclude(text__exact='').order_by('text') #.values_list('text')
             for n,v in enumerate(values):choices.append([n,v])
             return forms.ChoiceField(
-            choices= choices,
+            choices=choices,
             widget=forms.RadioSelect(attrs=attrs),
             **widget_parameters
-            )     
+            )
+        #TODO make a multiple checked boxes persisted as separated values or a text field like ('value1, value2, value5') ?
+        elif tag.type == tag.CHECKBOX:
+            choices=[]
+            widget_parameters.pop('max_length')
+            # bring all options based on values for the tag choosen on choices_source 
+            values = Value.objects.filter(tag=tag.choices_source).exclude(text__exact='').order_by('text') #.values_list('text')
+            for n,v in enumerate(values):choices.append([n,v])
+            print('****', choices)
+            return forms.ChoiceField(
+            choices=choices,
+            widget=forms.CheckboxInput(attrs=attrs),
+            **widget_parameters
+            )  
         # elif tag.type == tag.MONEY:
         # self.fields['%s' % tag.id] = MoneyField(
             # label=str(tag),
@@ -142,6 +156,6 @@ class InspectionForm(forms.Form):
         tags = Tag.objects.filter(pk__in=tag_list).filter(
             iform_tag_tag__iform=iform).order_by('iform_tag_tag__order')
         super(InspectionForm, self).__init__(*args, **kwargs)
-        #Loop for assembling the form
+        # Loop for assembling the form
         for i, tag in enumerate(tags):
             self.fields['%s' % tag.id] = self.get_widget(tag, iform)

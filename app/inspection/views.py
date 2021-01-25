@@ -17,6 +17,7 @@ import json
 from django_tables2 import RequestConfig
 from django_tables2 import LazyPaginator
 
+
 class InspectionList(LoginRequiredMixin, ListView):
     model = Inspection
     context_name = 'inspection'
@@ -29,7 +30,7 @@ class InspectionList(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(InspectionList, self).get_context_data(**kwargs)
         table = InspectionTable(Inspection.objects.order_by('-pk'))
-        table.paginate(page=self.request.GET.get("page", 1), per_page=25)
+        # TODO check if this is correct: table.paginate(page=self.request.GET.get("page", 1), per_page=25)
         table.paginator = True
         RequestConfig(self.request).configure(table)
         context['filter'] = filter
@@ -76,7 +77,7 @@ def add_data(tag, value, data, inspection):
         text = str(data)
     elif tag.type in (tag.TEXT, tag.LARGE_TEXT, tag.DATETIME, tag.TIME, tag.DATE, 
                         tag.SECTION,):
-        text = data.encode('utf-8')
+        text = str(data)
     elif tag.type == tag.FLOAT:
         number = float(data) if data else None
     elif tag.type == tag.INTEGER:
@@ -86,8 +87,8 @@ def add_data(tag, value, data, inspection):
     else:
         number = int(data) if data else None
         text = str(data)
+        
     # finally save the instance in db
-
     value.tag = tag
     value.inspection = inspection
     value.text = text
@@ -167,7 +168,7 @@ def inspection_update (request, pk=None):
     else:
         print(request.method)
 
-    return render(request, 'inspection/inspection_update.html', {'form': form, 'iform': iform.name})
+    return render(request, 'inspection/inspection_update.html', {'form': form, 'iform': iform})
 
 @login_required
 def inspection_create (request, pk=None):
@@ -202,7 +203,7 @@ def inspection_create (request, pk=None):
     else:
         print(request.method)
 
-    return render(request, 'inspection/inspection_create.html', {'form': form, 'iform': iform.name})
+    return render(request, 'inspection/inspection_create.html', {'form': form, 'iform': iform})
 
 # this will work on js-grid
 def get_data_collections (request, iform_pk=None):
@@ -226,7 +227,7 @@ def get_data_collections (request, iform_pk=None):
         value_dic={}
 
     # get list of dictionaries for defining jsGrid fields    
-    tags = IFormTag.objects.filter(iform_id = iform_pk).only('tag')
+    tags = IFormTag.objects.filter(iform_id=iform_pk).only('tag')
     jsonizable_tag_list = []
     for tag in tags: 
         jsonizable_tag_list.append({"name":tag.tag.name,
