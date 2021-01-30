@@ -9,9 +9,14 @@ import datetime
 from django.forms.models import inlineformset_factory
 
 
+class MultiCheckBoxWidget(forms.CheckboxSelectMultiple):
+    def decompress(self, value):
+        if value:
+            print([v for v in value])
+            return [v for v in value]
+        return [None, None]
 # TODO: shoud I use validators? https://docs.djangoproject.com/en/1.11/ref/validators/
 # TODO: should I use widgets instead of form.Fields?
-        
 class InspectionForm(forms.Form):
 
     def get_widget(self, tag, iform):
@@ -25,71 +30,67 @@ class InspectionForm(forms.Form):
             tag.max_length = 1000
         if iform_tag.width > 0:
             attrs = {
-                'style': 'width:'+str(iform_tag.width ), 
-                # 'placeholder': tag.name
+                'style': 'width:'+str(iform_tag.width)
             }
+        if iform.layout == 1:
+            attrs['placeholder'] = tag.name
+            
         # put an asterisc before the tag label when it's a required field
         tag_label = f"{'*' if iform_tag.required else ''} {str(tag)}"
 
         widget_parameters = {
             'label': tag_label,
             'required': iform_tag.required,
-            'max_length': tag.max_length,
             'initial': iform_tag.default_value,
             'help_text': tag.help_text,
             'disabled': iform_tag.read_only, 
         }
         
         if tag.type == tag.TEXT:
+            attrs.update({'max_length':tag.max_length})
             return forms.CharField(
                 widget=forms.TextInput(attrs=attrs), 
                 **widget_parameters
             )
         elif tag.type == tag.LARGE_TEXT:
             attrs.update({'rows':4})
+            attrs.update({'max_length':tag.max_length})
             return forms.CharField(
             widget=forms.Textarea(attrs=attrs),
             **widget_parameters
             )
         elif tag.type == tag.INTEGER:
-            widget_parameters.pop('max_length')
             return forms.IntegerField(
             widget=forms.NumberInput(attrs=attrs),
             **widget_parameters
             )
         elif tag.type == tag.FLOAT:
-            widget_parameters.pop('max_length')
             return forms.DecimalField(
             widget=forms.NumberInput(attrs=attrs),
             decimal_places=tag.decimal_places,
             **widget_parameters
             )
         elif tag.type == tag.BOOL:
-            widget_parameters.pop('max_length')
             return forms.BooleanField(
             **widget_parameters
             )
         elif tag.type == tag.DATE:
-            widget_parameters.pop('max_length')
             return forms.DateField(
             widget=forms.DateInput(attrs=attrs),
             **widget_parameters
             )
         elif tag.type == tag.TIME:
-            widget_parameters.pop('max_length')
             return forms.TimeField(
             widget=forms.TimeInput(attrs=attrs),
             **widget_parameters
             )
         elif tag.type == tag.DATETIME:
-            widget_parameters.pop('max_length')
             return forms.DateTimeField(
             widget=forms.DateTimeInput(attrs=attrs),
             **widget_parameters
             )
         elif tag.type == tag.CHOICES:
             choices=[]
-            widget_parameters.pop('max_length')
             # bring all options based on all values for the tag choosen on choices_source 
             values = Value.objects.filter(tag=tag.choices_source).exclude(text__exact='').order_by('text') #.values_list('text')
             for n,v in enumerate(values):choices.append([n,v])
@@ -100,7 +101,6 @@ class InspectionForm(forms.Form):
             )        
         elif tag.type == tag.RADIO:
             choices=[]
-            widget_parameters.pop('max_length')
             # bring all options based on values for the tag choosen on choices_source 
             values = Value.objects.filter(tag=tag.choices_source).exclude(text__exact='').order_by('text') #.values_list('text')
             for n,v in enumerate(values):choices.append([n,v])
@@ -112,14 +112,12 @@ class InspectionForm(forms.Form):
         #TODO make a multiple checked boxes persisted as separated values or a text field like ('value1, value2, value5') ?
         elif tag.type == tag.CHECKBOX:
             choices=[]
-            widget_parameters.pop('max_length')
             # bring all options based on values for the tag choosen on choices_source 
             values = Value.objects.filter(tag=tag.choices_source).exclude(text__exact='').order_by('text') #.values_list('text')
             for n,v in enumerate(values):choices.append([n,v])
-            print('****', choices)
-            return forms.ChoiceField(
+            return forms.MultipleChoiceField(
             choices=choices,
-            widget=forms.CheckboxInput(attrs=attrs),
+            widget=MultiCheckBoxWidget(attrs=attrs),
             **widget_parameters
             )  
         # elif tag.type == tag.MONEY:
@@ -131,12 +129,10 @@ class InspectionForm(forms.Form):
             # )
 
         elif tag.type == tag.FILE:    
-            widget_parameters.pop('max_length')
             return forms.ImageField(
             **widget_parameters
             )    
         elif tag.type == tag.SECTION:
-            widget_parameters.pop('max_length')
             attrs.update({
                     'iframe':'border: none',
                     'style':'height:50; font-size: 25; background-color: #ffffff; border: 0; box-shadow: none',

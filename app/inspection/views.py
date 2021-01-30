@@ -84,6 +84,8 @@ def add_data(tag, value, data, inspection):
         number = int(data) if data else None
     elif tag.type in (tag.CHOICES, tag.RADIO):
         text = str(data)
+    elif tag.type == tag.CHECKBOX:
+        text = ', '.join(data)
     else:
         number = int(data) if data else None
         text = str(data)
