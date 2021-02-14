@@ -5,16 +5,17 @@ from app.inspection.models import Inspection
 from app.iform.models import IForm, IFormTag
 from app.tag.models import Tag
 from app.value.models import Value
-import datetime
 from django.forms.models import inlineformset_factory
 
 
 class MultiCheckBoxWidget(forms.CheckboxSelectMultiple):
     def decompress(self, value):
         if value:
-            print([v for v in value])
+            print('********', [v for v in value])
             return [v for v in value]
         return [None, None]
+
+
 # TODO: shoud I use validators? https://docs.djangoproject.com/en/1.11/ref/validators/
 # TODO: should I use widgets instead of form.Fields?
 class InspectionForm(forms.Form):
@@ -34,7 +35,6 @@ class InspectionForm(forms.Form):
             }
         if iform.layout == 1:
             attrs['placeholder'] = tag.name
-            
         # put an asterisc before the tag label when it's a required field
         tag_label = f"{'*' if iform_tag.required else ''} {str(tag)}"
 
@@ -43,13 +43,12 @@ class InspectionForm(forms.Form):
             'required': iform_tag.required,
             'initial': iform_tag.default_value,
             'help_text': tag.help_text,
-            'disabled': iform_tag.read_only, 
+            'disabled': iform_tag.read_only,
         }
-        
         if tag.type == tag.TEXT:
             attrs.update({'max_length':tag.max_length})
             return forms.CharField(
-                widget=forms.TextInput(attrs=attrs), 
+                widget=forms.TextInput(attrs=attrs),
                 **widget_parameters
             )
         elif tag.type == tag.LARGE_TEXT:
@@ -98,12 +97,12 @@ class InspectionForm(forms.Form):
             widget=forms.Select(attrs=attrs),
             choices=choices,
             **widget_parameters
-            )        
+            )
         elif tag.type == tag.RADIO:
             choices=[]
             # bring all options based on values for the tag choosen on choices_source 
             values = Value.objects.filter(tag=tag.choices_source).exclude(text__exact='').order_by('text') #.values_list('text')
-            for n,v in enumerate(values):choices.append([n,v])
+            for n, v in enumerate(values):choices.append([n,v])
             return forms.ChoiceField(
             choices=choices,
             widget=forms.RadioSelect(attrs=attrs),
@@ -114,12 +113,12 @@ class InspectionForm(forms.Form):
             choices=[]
             # bring all options based on values for the tag choosen on choices_source 
             values = Value.objects.filter(tag=tag.choices_source).exclude(text__exact='').order_by('text') #.values_list('text')
-            for n,v in enumerate(values):choices.append([n,v])
+            for n, v in enumerate(values):choices.append([n,v])
             return forms.MultipleChoiceField(
             choices=choices,
             widget=MultiCheckBoxWidget(attrs=attrs),
             **widget_parameters
-            )  
+            )
         # elif tag.type == tag.MONEY:
         # self.fields['%s' % tag.id] = MoneyField(
             # label=str(tag),
@@ -128,10 +127,10 @@ class InspectionForm(forms.Form):
             # initial=iform_tag.default_value,
             # )
 
-        elif tag.type == tag.FILE:    
+        elif tag.type == tag.FILE:
             return forms.ImageField(
             **widget_parameters
-            )    
+            )
         elif tag.type == tag.SECTION:
             attrs.update({
                     'iframe':'border: none',

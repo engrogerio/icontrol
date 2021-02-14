@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import datetime
 from app.inspection.forms import InspectionForm
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
@@ -101,7 +101,7 @@ def get_data(tag, inspection):
     data = None
     
     if tag.type in (tag.TEXT, tag.LARGE_TEXT, tag.DATETIME, tag.TIME, tag.DATE, tag.BOOL, 
-        tag.CHOICES, tag.RADIO, tag.SECTION):
+        tag.CHOICES, tag.RADIO, tag.CHECKBOX):
         try:
             data = Value.objects.filter(inspection=inspection).get(tag=tag).text
         except:
@@ -138,11 +138,12 @@ def inspection_update (request, pk=None):
                 
                 tag = Tag.objects.get(id=field.name)
                 # try to recover data from Value instance, but if can't, that is due to the tag was created
-                # after this inspection had been created. So, its created a new Value instance.
+                # after this inspection had been created. So, it creates a new Value instance.
                 try:
                     value = Value.objects.filter(inspection=inspection).get(tag=tag)
                     value.updated_by = request.user
-                except:
+                except Exception as ex:
+                    raise ex
                     value = Value()
                 value.updated_by = request.user
                 inspection.updated_by = request.user
@@ -154,7 +155,7 @@ def inspection_update (request, pk=None):
 
     if request.method == 'GET':
         # iterate iform fields and get types / values
-        form = InspectionForm( iform_id=iform.id) #request.GET,
+        form = InspectionForm(iform_id=iform.id) #request.GET,
 
         # get the values saved for each field for this specific inspection and tag
         for field in form:
@@ -165,6 +166,10 @@ def inspection_update (request, pk=None):
                     field.initial=True
                 else:
                     field.initial=False
+                    
+            elif tag.type == tag.CHECKBOX:
+                field.initial = list(data)
+
             else:
                 field.initial = data
     else:
