@@ -8,14 +8,6 @@ from app.value.models import Value
 from django.forms.models import inlineformset_factory
 
 
-class MultiCheckBoxWidget(forms.CheckboxSelectMultiple):
-    def decompress(self, value):
-        if value:
-            print('********', [v for v in value])
-            return [v for v in value]
-        return [None, None]
-
-
 # TODO: shoud I use validators? https://docs.djangoproject.com/en/1.11/ref/validators/
 # TODO: should I use widgets instead of form.Fields?
 class InspectionForm(forms.Form):
@@ -116,7 +108,7 @@ class InspectionForm(forms.Form):
             for n, v in enumerate(values):choices.append([n,v])
             return forms.MultipleChoiceField(
             choices=choices,
-            widget=MultiCheckBoxWidget(attrs=attrs),
+            widget=forms.CheckboxSelectMultiple(attrs=attrs),
             **widget_parameters
             )
         # elif tag.type == tag.MONEY:
@@ -131,17 +123,26 @@ class InspectionForm(forms.Form):
             return forms.ImageField(
             **widget_parameters
             )
+            
         elif tag.type == tag.SECTION:
             attrs.update({
                     'iframe':'border: none',
-                    'style':'height:50; font-size: 25; background-color: #ffffff; border: 0; box-shadow: none',
+                    'style':'height:2; font-size: 1; background-color: #eeeeee; border: 0; box-shadow: none',
                 })
             return forms.CharField(
             label='',
             required=False,
             disabled=True,
             initial=tag.name,
-            widget=forms.TextInput(attrs=attrs)
+            widget=forms.TextInput(attrs=attrs),
+            help_text=tag.name
+            )
+            
+        elif tag.type == tag.URL:
+            print(attrs)
+            return forms.URLField(
+            widget=forms.URLInput(attrs=attrs),
+            **widget_parameters
             )
 
     def __init__(self, *args, **kwargs):

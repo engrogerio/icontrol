@@ -37,11 +37,12 @@ class Tag(ControlModel):
     LARGE_TEXT = 12
     RADIO = 13
     CHECKBOX = 14
+    URL = 15
     
 
     JSGRID_TYPE = ((TEXT, 'text'), (INTEGER, 'number'), (FLOAT, 'number'),
                     (CHOICES, 'select'), (BOOL, 'checkbox'), (DATE, 'date'),
-                    (TIME, 'time'), (DATETIME, 'datetime'), 
+                    (TIME, 'time'), (DATETIME, 'datetime'), (URL, 'URL'),
                     (FILE, 'File'), (SECTION, 'section'),
                     (LARGE_TEXT, 'textarea'), (RADIO, 'radiobutton'), (CHECKBOX, 'Check Box')
                     )
@@ -49,7 +50,7 @@ class Tag(ControlModel):
     TYPE_CHOICES = ((TEXT, 'Text'), (INTEGER, 'Integer Number'), (FLOAT, 'Float Point Number'),
                     (CHOICES, 'Choices'), (BOOL, 'Yes/No'), (DATE, 'Date'), (TIME, 'Time'),
                     (DATETIME, 'Date and Time'), # (MONEY, 'Money'), 
-                    (FILE, 'File'), (SECTION, 'Section'),
+                    (FILE, 'File'), (SECTION, 'Section'), (URL, 'URL'),
                     (LARGE_TEXT, 'Text Area'), (RADIO, 'Radio Button'), (CHECKBOX, 'Check Box')
                     )
 

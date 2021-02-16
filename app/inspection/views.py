@@ -54,18 +54,18 @@ def add_data(tag, value, data, inspection):
         number = 1 OR 0
         text = ''
     TEXT:
-        number = ''
+        number = None
         text = TEXT
 
     DATE, TIME & DATETIME:
         # TODO: maybe would be good if save the date INTEGER as Unix Time:
         # the number of seconds since 1970-01-01 00:00:00 UTC.
-        number = ''
+        number = None
         text = DATETIME
 
     INTEGER & FLOAT:
         number = INTEGER/FLOAT
-        text = ''
+        text = None
 
     CHOICE: TODO
     """
@@ -75,8 +75,8 @@ def add_data(tag, value, data, inspection):
 
     if tag.type == tag.BOOL:
         text = str(data)
-    elif tag.type in (tag.TEXT, tag.LARGE_TEXT, tag.DATETIME, tag.TIME, tag.DATE, 
-                        tag.SECTION,):
+    elif tag.type in (tag.TEXT, tag.LARGE_TEXT, tag.DATETIME, tag.TIME, 
+                      tag.DATE, tag.URL):
         text = str(data)
     elif tag.type == tag.FLOAT:
         number = float(data) if data else None
@@ -87,7 +87,7 @@ def add_data(tag, value, data, inspection):
     elif tag.type == tag.CHECKBOX:
         text = ', '.join(data)
     else:
-        number = int(data) if data else None
+        number = None
         text = str(data)
         
     # finally save the instance in db
@@ -100,8 +100,8 @@ def add_data(tag, value, data, inspection):
 def get_data(tag, inspection):
     data = None
     
-    if tag.type in (tag.TEXT, tag.LARGE_TEXT, tag.DATETIME, tag.TIME, tag.DATE, tag.BOOL, 
-        tag.CHOICES, tag.RADIO, tag.CHECKBOX):
+    if tag.type in (tag.TEXT, tag.LARGE_TEXT, tag.DATETIME, tag.TIME, tag.DATE,
+                    tag.BOOL, tag.CHOICES, tag.RADIO, tag.CHECKBOX, tag.URL):
         try:
             data = Value.objects.filter(inspection=inspection).get(tag=tag).text
         except:
@@ -143,7 +143,6 @@ def inspection_update (request, pk=None):
                     value = Value.objects.filter(inspection=inspection).get(tag=tag)
                     value.updated_by = request.user
                 except Exception as ex:
-                    raise ex
                     value = Value()
                 value.updated_by = request.user
                 inspection.updated_by = request.user
