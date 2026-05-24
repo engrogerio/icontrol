@@ -16,7 +16,7 @@ def add_variable_to_context(request):
 
     #creating branch for create new tags
     inspection_branch = {"id":"new_tags", "parent":"#", "text":"Create Tag", "icon": "fa fa-tags",
-        "a_attr": {"href": "/tag/create"}}
+        "a_attr": {"href": "/icontrol/tag/create"}}
     obj_list.append(inspection_branch)
 
     # #creating branch for tags
@@ -26,7 +26,7 @@ def add_variable_to_context(request):
 
     #creating branch for create new iforms
     inspection_branch = {"id":"new_iforms", "parent":"#", "text":"Create Form", "icon": "fa fa-eye",
-        "a_attr": {"href": "/iform/create"}}
+        "a_attr": {"href": "/icontrol/iform/create"}}
     obj_list.append(inspection_branch)
 
     #creating branch for iforms
@@ -51,14 +51,14 @@ def add_variable_to_context(request):
         parent_id = 'iforms'
         if iform.parent: parent_id=str(iform.parent.id)
         js_iform={"id":str(iform.id), "parent":parent_id, "text":iform.name, "icon": "fa fa-list",
-            "a_attr": {"href": "/iform/update/"+str(iform.id)}}
+            "a_attr": {"href": "/icontrol/iform/update/"+str(iform.id)}}
         obj_list.append(js_iform)
         #Inserting tags on iforms
         for iformtag in iformtags.filter(iform=iform):
             parent_id = 'iforms'
             if iformtag.iform: parent_id=str(iformtag.iform.id)
             js_iformtag={"id":str(iformtag.id), "parent":parent_id, "text":iformtag.tag.name, "icon": "fa fa-tag",
-                "a_attr": {"href": "/tag/update/"+str(iformtag.tag.id)}}
+                "a_attr": {"href": "/icontrol/tag/update/"+str(iformtag.tag.id)}}
             obj_list.append(js_iformtag)
         
    
@@ -68,7 +68,7 @@ def add_variable_to_context(request):
         fparent_id = 'new_inspection'
         if form.parent: fparent_id=str(form.parent.id)+'new'
         js_form={"id":str(form.id)+'new', "parent":fparent_id, "text":form.name, "icon": "fa fa-search-plus",
-            "a_attr": {"href": "/inspection/create/"+str(form.id)}}
+            "a_attr": {"href": "/icontrol/inspection/create/"+str(form.id)}}
         obj_list.append(js_form)
 
    #Inserting show data collections
@@ -76,14 +76,14 @@ def add_variable_to_context(request):
         fparent_id = 'show_values'
         if form.parent: fparent_id=str(form.parent.id)+'show'
         js_form={"id":str(form.id)+'show', "parent":fparent_id, "text":form.name, "icon": "fa fa-camera",
-            "a_attr": {"href": "/inspection/values/"+str(form.id)}}
+            "a_attr": {"href": "/icontrol/inspection/values/"+str(form.id)}}
         obj_list.append(js_form)
 
     #Inserting edit inspection
     for inspection in inspections:
         js_inspection={"id":str(inspection.id), "parent":"inspections", "text":str(inspection)
         , "icon": "fa fa-file",
-            "a_attr": {"href": "/inspection/update/"+str(inspection.id)}}
+            "a_attr": {"href": "/icontrol/inspection/update/"+str(inspection.id)}}
         obj_list.append(js_inspection)
         
     return {
