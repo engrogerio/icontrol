@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from django.db import models
 from django.db.models import UUIDField, CharField, ForeignKey, IntegerField, FloatField, ManyToManyField
 import uuid
 from icontrol.models import ControlModel
@@ -8,7 +8,7 @@ from django_tables2.utils import A
 import django_filters
 from app.iform.models import IFormTag
 import pint
-from fontawesome.fields import IconField
+#from fontawesome.fields import IconField
 
 
 
@@ -17,7 +17,7 @@ class Tag(ControlModel):
     class Meta:
         db_table='tag'
 
-    icon = IconField()
+    #icon = IconField()
       
     TEXT = 1
     INTEGER = 2
@@ -53,12 +53,18 @@ class Tag(ControlModel):
     id = UUIDField(primary_key=True, default=uuid.uuid4, )
     name = CharField(max_length=255)
     type = IntegerField('Field Type', choices=TYPE_CHOICES, blank=True, null=True)
-    unit = CharField('Unit', choices=UNIT_CHOICES, blank=True, null=True, max_length=40)
+    unit = CharField('Unit', choices=UNIT_CHOICES, blank=True, null=True, max_length=100)
     decimal_places = IntegerField(default=0)
  
     max_length = IntegerField(default=100) # 0 means no limit or 1000 characteres
-    choices_source = ForeignKey('Tag', blank=True, null=True )
-    parent = ForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
+    choices_source = ForeignKey(
+        'Tag', blank=True, null=True,
+        related_name='choice_dependents',
+        related_query_name='choice_dependent',
+        db_index=True,
+        on_delete=models.CASCADE
+    )
+    parent = ForeignKey('self', blank=True, null=True, related_name='children', db_index=True, on_delete=models.CASCADE)
     help_text = CharField('Help Text', blank=True, null=True, max_length=255)
 
     def __unicode__(self):
